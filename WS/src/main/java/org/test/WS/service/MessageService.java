@@ -8,15 +8,29 @@ import org.test.WS.model.Message;
 // Used for returning messages
 // This is the class that will be used for DB communication
 public class MessageService {
+	List<Message> messages;
 	
-	// Creates messages and returns
+	// Creates messages and returns them
 	public List<Message> getMessages() {
-		Message m1 = new Message("Hello!", 1);
+		Message m1 = new Message("Helloasdfasfsd!", 1);
 		Message m2 = new Message("Hello again!", 2);
-		List<Message> list = new ArrayList<>();
-		list.add(m1);
-		list.add(m2);
-		return list;
-
+		messages = new ArrayList<>();
+		messages.add(m1);
+		messages.add(m2);
+		return messages;
 	}
+	
+	public Message getMessage(int id) {
+		Message m1 = new Message("Helloasdfasfsd!", 1);
+		Message m2 = new Message("Hello again!", 2);
+		messages = new ArrayList<>();
+		messages.add(m1);
+		messages.add(m2);
+		
+		return messages.iterator().next();
+	}
+	
+	
+	
+	
 }

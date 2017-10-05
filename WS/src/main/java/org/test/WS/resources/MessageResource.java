@@ -11,7 +11,7 @@ import org.test.WS.model.Message;
 import org.test.WS.service.MessageService;
 
 // The "user interface" that user connects to
-//http://localhost:8080/WS/wepapi/messages
+//http://localhost:8080/WS/webapi/messages
 @Path("messages")
 public class MessageResource {
 	MessageService ms = new MessageService();
@@ -22,6 +22,9 @@ public class MessageResource {
 	public List<Message> getIt() {
 		return ms.getMessages();
 	}
+	
+	
+
 }
 
 
