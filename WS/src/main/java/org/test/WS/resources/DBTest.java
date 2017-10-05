@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import org.test.WS.model.Message;
 import org.test.WS.service.MessageService;
 
+// Test class for db connection 
+
 @Path("db")
 public class DBTest {
 	
