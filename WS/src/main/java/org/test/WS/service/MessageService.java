@@ -11,7 +11,7 @@ public class MessageService {
 	List<Message> messages;
 	
 	public MessageService() {
-		Message m1 = new Message("Helloasdfasfsd!", 1);
+		Message m1 = new Message("Hello244223234sfsd!", 1);
 		Message m2 = new Message("Hello again!", 2);
 		messages = new ArrayList<>();
 		messages.add(m1);
