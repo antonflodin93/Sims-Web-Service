@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 
 import org.test.WS.model.Message;
@@ -23,6 +24,13 @@ public class MessageResource {
 		return ms.getMessages();
 	}
 	
+	@GET
+	@Path("{id}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Message getUserById(@PathParam("id") String id) {
+		int theid = Integer.parseInt(id);
+	   return ms.getMessage(theid);
+	}
 	
 
 }

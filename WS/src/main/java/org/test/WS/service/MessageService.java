@@ -10,24 +10,22 @@ import org.test.WS.model.Message;
 public class MessageService {
 	List<Message> messages;
 	
-	// Creates messages and returns them
-	public List<Message> getMessages() {
+	public MessageService() {
 		Message m1 = new Message("Helloasdfasfsd!", 1);
 		Message m2 = new Message("Hello again!", 2);
 		messages = new ArrayList<>();
 		messages.add(m1);
 		messages.add(m2);
+	}
+	
+	// Creates messages and returns them
+	public List<Message> getMessages() {
 		return messages;
 	}
 	
 	public Message getMessage(int id) {
-		Message m1 = new Message("Helloasdfasfsd!", 1);
-		Message m2 = new Message("Hello again!", 2);
-		messages = new ArrayList<>();
-		messages.add(m1);
-		messages.add(m2);
-		
-		return messages.iterator().next();
+			
+		return messages.get(id-1);
 	}
 	
 	
