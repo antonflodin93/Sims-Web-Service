@@ -32,6 +32,8 @@
           			<!--	CHANGE THIS TO SEND TO LOCAL/REMOTE SEVER!
           					Then choose Rund->Run configurations-> 
           					enter "tomcat7:redeploy" in goal, and then run
+          					10.250.114.167 local
+          					193.10.119.34 server
           			 -->
         		</configuration>
       </plugin>

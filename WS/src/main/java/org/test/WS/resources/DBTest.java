@@ -18,15 +18,18 @@ public class DBTest {
 	@GET
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getIt() throws ClassNotFoundException {
-		String user = "user";
-		String password = "password";
+		String user = "userasd";
+		String password = "Tu3TLRUPhQbcu53y";
+		String SERVER_IP = "193.10.119.34";
+		String LOCAL_IP = "10.250.114.167";
+		
 		String returnmessage = "";
 		Class.forName("com.mysql.jdbc.Driver");
 		
 		try {
 			
 			// Get connection to DB
-			Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/demo?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", user, password);
+			Connection connection = DriverManager.getConnection("jdbc:mysql://" + SERVER_IP + ":3306/demo?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", user, password);
 
 			// Create a statement
 			Statement statement = connection.createStatement();
