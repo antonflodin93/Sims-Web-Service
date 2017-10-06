@@ -20,7 +20,7 @@ public class MessageService {
 
 	}
 
-	// Creates messages and returns them
+	// Returns all the messages
 	public List<Message> getMessages() throws SQLException, ClassNotFoundException {
 		result = new ArrayList<Message>();
 		dBconnection = new DBConnection();
@@ -30,11 +30,43 @@ public class MessageService {
 		resultSet = DBConnection.getResultSet(query, connection);
 		while (resultSet.next()) {
 			Message m = new Message(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2));
-	        result.add(m);
-	    }
-		
-		
+			result.add(m);
+		}
+
 		return result;
+	}
+
+	// Returns employee with id
+	public Message getMessage(int id) throws SQLException, ClassNotFoundException {
+		dBconnection = new DBConnection();
+		connection = DBConnection.setDBConnection();
+		String query = "SELECT * FROM test WHERE employeeID = " + id;
+
+		resultSet = DBConnection.getResultSet(query, connection);
+
+		Message message = new Message(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2));
+
+		return message;
+	}
+
+	public String addUser(Message message) throws ClassNotFoundException, SQLException {
+		try {
+			String returnmessage = "";
+
+		} catch (SQLException e) {
+			returnmessage = e.getMessage();
+		}
+
+		dBconnection = new DBConnection();
+		connection = DBConnection.setDBConnection();
+		/*
+		 * String query = "INSERT INTO test (employeeName)\r\n" + "VALUES ('" +
+		 * message.getEmployeeName() + "');";
+		 */
+		String query = "INSERT INTO test VALUES (NULL, 'Another Name2');";
+
+		int i = DBConnection.getIntResult(query, connection);
+		return i;
 	}
 
 }

@@ -30,5 +30,13 @@ public class DBConnection {
 		return resultset;
 	}
 	
+	public static int getIntResult(String query, Connection conn) throws SQLException {
+		connection = conn;
+		int i = connection.createStatement().executeUpdate(query);
+		
+		return i;
+		
+	}
+	
 
 }
