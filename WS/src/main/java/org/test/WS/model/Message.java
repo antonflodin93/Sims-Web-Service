@@ -6,33 +6,35 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class Message {
 
-	private String message;
-	private int id;
+	private String employeeName;
+	private int employeeId;
 
 	public Message() {
 		
 	}
 	
-	public Message(String message, int id) {
+	public Message(int id, String name) {
 		super();
-		this.message = message;
-		this.id = id;
+		this.employeeName = name;
+		this.employeeId = id;
 	}
 
-	public int getId() {
-		return id;
+	public String getEmployeeName() {
+		return employeeName;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setEmployeeName(String employeeName) {
+		this.employeeName = employeeName;
 	}
 
-	public String getMessage() {
-		return message;
+	public int getEmployeeId() {
+		return employeeId;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
 	}
+
+	
 
 }

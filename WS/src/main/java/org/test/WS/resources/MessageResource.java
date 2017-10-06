@@ -1,5 +1,7 @@
 package org.test.WS.resources;
 
+
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.ws.rs.GET;
@@ -20,18 +22,19 @@ public class MessageResource {
 	// Default return messages from messageservice class
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Message> getIt() {
+	public List<Message> getMessages() throws ClassNotFoundException, SQLException {
 		return ms.getMessages();
 	}
 	
+	/*
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Message getUserById(@PathParam("id") String id) {
+	public ResultSet getUserById(@PathParam("id") String id) {
 		int theid = Integer.parseInt(id);
 	   return ms.getMessage(theid);
 	}
-	
+	*/
 
 }
 
