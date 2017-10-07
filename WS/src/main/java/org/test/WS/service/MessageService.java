@@ -1,6 +1,7 @@
 package org.test.WS.service;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -49,7 +50,17 @@ public class MessageService {
 		return message;
 	}
 
-	public String addUser(Message message) throws ClassNotFoundException, SQLException {
+	public Message addUser(Message message) throws ClassNotFoundException, SQLException {
+		DBConnection connect = new DBConnection();
+		String sql = "insert into test (employeeId, employeeName) values(?, ?)";
+		connection = DBConnection.setDBConnection();
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, message.getEmployeeId());
+		pst.setString(2, message.getEmployeeName());
+		pst.executeUpdate();
+		pst.close();
+		return message;
+		/*
 		try {
 			String returnmessage = "";
 
@@ -63,10 +74,13 @@ public class MessageService {
 		 * String query = "INSERT INTO test (employeeName)\r\n" + "VALUES ('" +
 		 * message.getEmployeeName() + "');";
 		 */
+		/*
 		String query = "INSERT INTO test VALUES (NULL, 'Another Name2');";
 
 		int i = DBConnection.getIntResult(query, connection);
 		return i;
+
+		*/
 	}
 
 }

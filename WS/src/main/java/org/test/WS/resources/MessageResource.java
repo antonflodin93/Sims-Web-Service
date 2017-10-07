@@ -39,7 +39,7 @@ public class MessageResource {
 	// @Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public int addUser(Message message) throws ClassNotFoundException, SQLException {
+	public Message addUser(Message message) throws ClassNotFoundException, SQLException {
 
 		return ms.addUser(message);
 	}
