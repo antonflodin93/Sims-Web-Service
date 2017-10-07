@@ -21,22 +21,4 @@ public class DBConnection {
 		
 		return connection;
 	}
-	
-	public static ResultSet getResultSet(String query, Connection conn) throws SQLException {
-		
-		connection = conn;
-		resultset = connection.createStatement().executeQuery(query);
-		
-		return resultset;
-	}
-	
-	public static int getIntResult(String query, Connection conn) throws SQLException {
-		connection = conn;
-		int i = connection.createStatement().executeUpdate(query);
-		
-		return i;
-		
-	}
-	
-
 }
