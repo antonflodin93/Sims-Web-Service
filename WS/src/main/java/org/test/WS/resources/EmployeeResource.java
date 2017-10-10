@@ -38,7 +38,6 @@ public class EmployeeResource {
 
 	// Insert an employee in database, returns employee
 	@POST
-	// @Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Employee addUser(Employee employee) throws ClassNotFoundException, SQLException {

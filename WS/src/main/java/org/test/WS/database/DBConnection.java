@@ -7,9 +7,6 @@ import java.sql.SQLException;
 
 public class DBConnection {
 	private static Connection connection;
-	private static ResultSet resultset;
-	
-	
 	private static String username = "userasd";
 	private static String password = "Tu3TLRUPhQbcu53y";
 	private static String serverIp = "193.10.119.34";

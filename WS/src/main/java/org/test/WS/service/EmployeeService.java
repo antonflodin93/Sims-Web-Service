@@ -30,6 +30,7 @@ public class EmployeeService {
 		String sql = "SELECT * from employees";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		resultSet = pst.executeQuery();
+		
 		while (resultSet.next()) {
 			Employee m = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3));
 			result.add(m);
@@ -48,24 +49,24 @@ public class EmployeeService {
 		pst.setLong(1, id);
 		resultSet = pst.executeQuery();
 		resultSet.next();
-		Employee message = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3));
+		Employee employee = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3));
 		pst.close();
-		return message;
+		return employee;
 	}
 
 	// Inserts employee into db
-	public Employee addEmployee(Employee message) throws ClassNotFoundException, SQLException {
+	public Employee addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
 		
 		DBConnection connect = new DBConnection();
 		connection = DBConnection.setDBConnection();
 		String sql = "insert into employees (employeeId, employeeFirstName, employeeLastName) values(?, ?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
-		pst.setLong(1, message.getEmployeeId());
-		pst.setString(2, message.getEmployeeFirstName());
-		pst.setString(3, message.getEmployeeLastName());
+		pst.setLong(1, employee.getEmployeeId());
+		pst.setString(2, employee.getEmployeeFirstName());
+		pst.setString(3, employee.getEmployeeLastName());
 		pst.executeUpdate();
 		pst.close();
-		return message;
+		return employee;
 	}
 
 }
