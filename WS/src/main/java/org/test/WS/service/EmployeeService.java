@@ -48,8 +48,13 @@ public class EmployeeService {
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, id);
 		resultSet = pst.executeQuery();
-		resultSet.next();
-		Employee employee = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3));
+		Employee employee = new Employee();
+		if(resultSet.next() == true) {
+			employee = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3));
+		}
+		else {
+			employee = null;
+		}
 		pst.close();
 		return employee;
 	}
@@ -67,6 +72,21 @@ public class EmployeeService {
 		pst.executeUpdate();
 		pst.close();
 		return employee;
+	}
+
+	public Employee deleteEmployeeById(int id) throws SQLException, ClassNotFoundException {
+		// Get the employee that is going to be deleted
+		Employee e = getEmployee(id);
+		
+		DBConnection connect = new DBConnection();
+		connection = DBConnection.setDBConnection();
+		
+		String sql = "DELETE FROM employees WHERE employeeId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, id);
+		pst.executeUpdate();
+		pst.close();
+		return e;
 	}
 
 }

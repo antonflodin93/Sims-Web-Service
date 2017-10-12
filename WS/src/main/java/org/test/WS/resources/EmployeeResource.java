@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -18,35 +19,38 @@ import org.test.WS.service.EmployeeService;
 //http://localhost:8080/WS/webapi/messages
 @Path("employees")
 public class EmployeeResource {
-	EmployeeService ms = new EmployeeService();
+	EmployeeService employeeService = new EmployeeService();
 
 	// Returns all employees
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Employee> getUsers() throws ClassNotFoundException, SQLException {
-		return ms.getEmployees();
+	public List<Employee> getEmployees() throws ClassNotFoundException, SQLException {
+		return employeeService.getEmployees();
 	}
 
 	// Returns employee with a certain ID
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Employee getUserById(@PathParam("id") String id) throws ClassNotFoundException, SQLException {
+	public Employee getEmployeeById(@PathParam("id") String id) throws ClassNotFoundException, SQLException {
 		int theid = Integer.parseInt(id);
-		return ms.getEmployee(theid);
+		return employeeService.getEmployee(theid);
 	}
 
 	// Insert an employee in database, returns employee
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Employee addUser(Employee employee) throws ClassNotFoundException, SQLException {
+	public Employee addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
 
-		return ms.addEmployee(employee);
+		return employeeService.addEmployee(employee);
 	}
-}
 
-/*
- * Authentification: * Sending password and username every time, encode
- * password. Send over https to keep info secure *
- */
+	// Insert an employee in database, returns employee
+	@DELETE
+	@Path("{id}")
+	public Employee deleteEmployeeById(@PathParam("id") int id) throws ClassNotFoundException, SQLException {
+		return employeeService.deleteEmployeeById(id);
+	}
+
+}
