@@ -14,7 +14,7 @@ public class SecureResource {
 
 	// Returns all employees
 	@GET
-	@Path("test")
+	@Path("employees")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getEmployees() throws ClassNotFoundException, SQLException {
 		return "This API is secured";

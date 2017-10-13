@@ -25,14 +25,14 @@ public class EmployeeService {
 	public List<Employee> getEmployees() throws SQLException, ClassNotFoundException {
 			
 		result = new ArrayList<Employee>();
-		DBConnection connect = new DBConnection();
 		connection = DBConnection.setDBConnection();
 		String sql = "SELECT * from employees";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		resultSet = pst.executeQuery();
 		
 		while (resultSet.next()) {
-			Employee m = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3));
+			Employee m = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4),
+					resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8));
 			result.add(m);
 		}
 		pst.close();
@@ -50,7 +50,8 @@ public class EmployeeService {
 		resultSet = pst.executeQuery();
 		Employee employee = new Employee();
 		if(resultSet.next() == true) {
-			employee = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3));
+			employee = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2), resultSet.getString(3), resultSet.getString(4), 
+					resultSet.getString(5), resultSet.getString(6), resultSet.getString(7), resultSet.getString(8));
 		}
 		else {
 			employee = null;
@@ -61,14 +62,18 @@ public class EmployeeService {
 
 	// Inserts employee into db
 	public Employee addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
-		
-		DBConnection connect = new DBConnection();
 		connection = DBConnection.setDBConnection();
-		String sql = "insert into employees (employeeId, employeeFirstName, employeeLastName) values(?, ?, ?)";
+		String sql = "insert into employees (employeeId, employeeFirstName, employeeLastName, employeeUsername, "
+				+ "employeeEmail, employeePassword, employeePhonenumber, employeeCompany) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, employee.getEmployeeId());
 		pst.setString(2, employee.getEmployeeFirstName());
 		pst.setString(3, employee.getEmployeeLastName());
+		pst.setString(4, employee.getEmployeeUsername());
+		pst.setString(5, employee.getEmployeeEmail());
+		pst.setString(6, employee.getEmployeePassword());
+		pst.setString(7, employee.getEmployeePhonenumber());
+		pst.setString(8, employee.getEmployeeCompany());
 		pst.executeUpdate();
 		pst.close();
 		return employee;
