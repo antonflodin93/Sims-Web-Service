@@ -1,6 +1,6 @@
 package org.test.WS.resources;
 
-
+import javax.ws.rs.core.Response;
 import java.sql.SQLException;
 
 
@@ -14,10 +14,11 @@ public class SecureResource {
 
 	// Returns all employees
 	@GET
-	@Path("employees")
+	@Path("login")
 	@Produces(MediaType.TEXT_PLAIN)
-	public String getEmployees() throws ClassNotFoundException, SQLException {
-		return "This API is secured";
+	public Response testLogin() throws ClassNotFoundException, SQLException {
+		Response response = Response.status(Response.Status.ACCEPTED).entity("User is granted access").build();
+		return response;
 	}
 
 }
