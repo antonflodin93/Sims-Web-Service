@@ -30,11 +30,19 @@ public class EmployeeResource {
 
 	// Returns employee with a certain ID
 	@GET
-	@Path("{id}")
+	@Path("userid/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Employee getEmployeeById(@PathParam("id") String id) throws ClassNotFoundException, SQLException {
 		int theid = Integer.parseInt(id);
-		return employeeService.getEmployee(theid);
+		return employeeService.getEmployeeById(theid);
+	}
+
+	// Returns employee with a certain username
+	@GET
+	@Path("username/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Employee getEmployeeByUsername(@PathParam("username") String username) throws ClassNotFoundException, SQLException {
+		return employeeService.getEmployeeByUsername(username);
 	}
 
 	// Insert an employee in database, returns employee

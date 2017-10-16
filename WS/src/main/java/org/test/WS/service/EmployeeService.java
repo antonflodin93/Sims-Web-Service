@@ -45,7 +45,7 @@ public class EmployeeService {
 	}
 
 	// Returns employee with id
-	public Employee getEmployee(int id) throws SQLException, ClassNotFoundException {
+	public Employee getEmployeeById(int id) throws SQLException, ClassNotFoundException {
 		connection = DBConnection.setDBConnection();
 		String sql = "Select * from employees where employeeID = ?";
 		PreparedStatement pst = connection.prepareStatement(sql);
@@ -63,11 +63,28 @@ public class EmployeeService {
 		return employee;
 	}
 
+	// Returns employee with id
+	public Employee getEmployeeByUsername(String username) throws SQLException, ClassNotFoundException {
+		connection = DBConnection.setDBConnection();
+		String sql = "Select * from employees where employeeUsername = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setString(1, username);
+		resultSet = pst.executeQuery();
+		Employee employee = new Employee();
+		if (resultSet.next() == true) {
+			employee = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2),
+					resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6),
+					resultSet.getString(7), resultSet.getString(8));
+		} else {
+			employee = null;
+		}
+		pst.close();
+		return employee;
+	}
+
 	// Inserts employee into db
-	public Employee addEmployee(Employee employee)
-			throws ClassNotFoundException, SQLException {
-		
-		
+	public Employee addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
+
 		// Generate salt
 		byte[] salt = new byte[16];
 		new SecureRandom().nextBytes(salt);
@@ -82,7 +99,7 @@ public class EmployeeService {
 		// Add the salt to the password
 		String passwordandsalt = employee.getEmployeePassword() + saltString;
 		MessageDigest md;
-		
+
 		try {
 			// Hash it
 			md = MessageDigest.getInstance("SHA-256");
@@ -101,7 +118,6 @@ public class EmployeeService {
 
 		String hash = sb.toString();
 
-		
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO employees (employeeId, employeeFirstName, employeeLastName, employeeUsername, "
 				+ "employeeEmail, employeePassword, employeePhonenumber, employeeCompany, employeeSalt) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -122,7 +138,7 @@ public class EmployeeService {
 
 	public Employee deleteEmployeeById(int id) throws SQLException, ClassNotFoundException {
 		// Get the employee that is going to be deleted
-		Employee e = getEmployee(id);
+		Employee e = getEmployeeById(id);
 
 		connection = DBConnection.setDBConnection();
 
