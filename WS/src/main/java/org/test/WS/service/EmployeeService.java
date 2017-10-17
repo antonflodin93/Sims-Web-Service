@@ -9,7 +9,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import org.test.WS.model.Employee;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.test.WS.database.DBConnection;
 
 // Used for returning messages using DB
@@ -63,7 +71,7 @@ public class EmployeeService {
 		return employee;
 	}
 
-	// Returns employee with id
+	// Returns employee with username
 	public Employee getEmployeeByUsername(String username) throws SQLException, ClassNotFoundException {
 		connection = DBConnection.setDBConnection();
 		String sql = "Select * from employees where employeeUsername = ?";
@@ -83,7 +91,7 @@ public class EmployeeService {
 	}
 
 	// Inserts employee into db
-	public Employee addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
+	public Response addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
 
 		// Generate salt
 		byte[] salt = new byte[16];
@@ -98,7 +106,7 @@ public class EmployeeService {
 
 		// Add the salt to the password
 		String passwordandsalt = employee.getEmployeePassword() + saltString;
-		MessageDigest md;
+		MessageDigest md = null;
 
 		try {
 			// Hash it
@@ -106,7 +114,9 @@ public class EmployeeService {
 			md.update(passwordandsalt.getBytes());
 
 		} catch (NoSuchAlgorithmException e) {
-			return employee;
+			// Return status 500 if algorithm not found
+			 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+			 .entity("Could not successfully hash the password").build();
 		}
 
 		byte byteData[] = md.digest();
@@ -118,22 +128,58 @@ public class EmployeeService {
 
 		String hash = sb.toString();
 
-		connection = DBConnection.setDBConnection();
-		String sql = "INSERT INTO employees (employeeId, employeeFirstName, employeeLastName, employeeUsername, "
-				+ "employeeEmail, employeePassword, employeePhonenumber, employeeCompany, employeeSalt) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		PreparedStatement pst = connection.prepareStatement(sql);
-		pst.setLong(1, employee.getEmployeeId());
-		pst.setString(2, employee.getEmployeeFirstName());
-		pst.setString(3, employee.getEmployeeLastName());
-		pst.setString(4, employee.getEmployeeUsername());
-		pst.setString(5, employee.getEmployeeEmail());
-		pst.setString(6, hash);
-		pst.setString(7, employee.getEmployeePhonenumber());
-		pst.setString(8, employee.getEmployeeCompany());
-		pst.setString(9, saltString);
-		pst.executeUpdate();
-		pst.close();
-		return employee;
+		try {
+			connection = DBConnection.setDBConnection();
+			// Check if user exists
+			String checkIfExistsSql = "Select * from employees where employeeUsername = ? || employeeEmail = ?";
+			PreparedStatement ps = connection.prepareStatement(checkIfExistsSql);
+			ps.setString(1, employee.getEmployeeUsername());
+			ps.setString(2, employee.getEmployeeEmail());
+			resultSet = ps.executeQuery();
+
+			// If user do not exists
+			if (resultSet.next() == false) {
+				// Insert into db
+				String sql = "INSERT INTO employees (employeeId, employeeFirstName, employeeLastName, employeeUsername, "
+						+ "employeeEmail, employeePassword, employeePhonenumber, employeeCompany, employeeSalt) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				PreparedStatement pst = connection.prepareStatement(sql);
+				pst.setLong(1, employee.getEmployeeId());
+				pst.setString(2, employee.getEmployeeFirstName());
+				pst.setString(3, employee.getEmployeeLastName());
+				pst.setString(4, employee.getEmployeeUsername());
+				pst.setString(5, employee.getEmployeeEmail());
+				pst.setString(6, hash);
+				pst.setString(7, employee.getEmployeePhonenumber());
+				pst.setString(8, employee.getEmployeeCompany());
+				pst.setString(9, saltString);
+				pst.executeUpdate();
+				pst.close();
+			} else {
+				// User already exists, return 403
+				 return Response.status(Response.Status.FORBIDDEN)
+				.entity("User already exists, change username and/or email.").build();
+			}
+
+		} catch (SQLException e) {
+			 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+			 .entity("Could not successfully store the user information").build();
+		}
+		/*
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+
+			// Object to JSON in String
+			String jsonInString = mapper.writeValueAsString(employee);
+			 return Response.ok(jsonInString, MediaType.APPLICATION_JSON).build();
+
+		} catch (JsonProcessingException e) {
+			 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+			 .entity("Could not successfully return information correctly").build();
+
+		}
+*/
+			return Response.ok().build();
+
 	}
 
 	public Employee deleteEmployeeById(int id) throws SQLException, ClassNotFoundException {

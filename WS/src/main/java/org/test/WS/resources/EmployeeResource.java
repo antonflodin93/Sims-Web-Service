@@ -11,6 +11,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.test.WS.model.Employee;
 import org.test.WS.service.EmployeeService;
@@ -41,7 +42,8 @@ public class EmployeeResource {
 	@GET
 	@Path("username/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Employee getEmployeeByUsername(@PathParam("username") String username) throws ClassNotFoundException, SQLException {
+	public Employee getEmployeeByUsername(@PathParam("username") String username)
+			throws ClassNotFoundException, SQLException {
 		return employeeService.getEmployeeByUsername(username);
 	}
 
@@ -49,12 +51,12 @@ public class EmployeeResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Employee addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
+	public Response addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
 
 		return employeeService.addEmployee(employee);
 	}
 
-	// Insert an employee in database, returns employee
+	// Delete an employee in database, returns employee
 	@DELETE
 	@Path("{id}")
 	public Employee deleteEmployeeById(@PathParam("id") int id) throws ClassNotFoundException, SQLException {
