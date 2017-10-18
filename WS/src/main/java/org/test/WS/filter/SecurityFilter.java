@@ -41,14 +41,25 @@ public class SecurityFilter implements ContainerRequestFilter {
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
+		FileHandler fh;
+		// This block configure the logger with handler and formatter
+		fh = new FileHandler("C:/Users/Student/Desktop/DEV/Logs/MyLogFile.log");
+		SimpleFormatter formatter = new SimpleFormatter();
+		fh.setFormatter(formatter);
+		logger.addHandler(fh);
+		
 		// Check if the url consists of the secured url prefix
-		if (requestContext.getUriInfo().getPath().contains(SECURED_MASTER_LOGIN_URL_PREFIX)) {
+		if (requestContext.getUriInfo().getPath().contains(SECURED_URL_PREFIX)) {
+			
 
 			// Check if the user is employee or master
 			if (requestContext.getUriInfo().getPath().contains(SECURED_MASTER_LOGIN_URL_PREFIX)) {
 				userType = UserType.MASTER;
+				logger.info("MASTER");
+				
 			} else if (requestContext.getUriInfo().getPath().contains(SECURED_EMPLOYEE_LOGIN_URL_PREFIX)) {
 				userType = UserType.EMPLOYEE;
+				logger.info("EMPLOYEE");
 			}
 
 			// Get list of the authorization headers
@@ -70,12 +81,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 				username = tokenizer.nextToken();
 				password = tokenizer.nextToken();
 
-				FileHandler fh;
-				// This block configure the logger with handler and formatter
-				fh = new FileHandler("C:/Users/Student/Desktop/DEV/Logs/MyLogFile.log");
-				SimpleFormatter formatter = new SimpleFormatter();
-				fh.setFormatter(formatter);
-				logger.addHandler(fh);
+				
 
 				// Check if user exists
 				try {
@@ -108,16 +114,15 @@ public class SecurityFilter implements ContainerRequestFilter {
 		// specific role
 		if (userType == UserType.MASTER) {
 			sql = "SELECT employeePassword, employeeSalt FROM employees WHERE (employeeUsername = (?) OR employeeEmail = (?)) AND employeeRole = 'MASTER'";
-			logger.info("MASTER \n sql: " + sql);
+			logger.info("MASTER SQL");
 
 		} else if (userType == UserType.EMPLOYEE) {
-			logger.info("EMPLOYEE");
+			logger.info("EMPLOYEE SQL");
 			sql = "SELECT employeePassword, employeeSalt FROM employees WHERE (employeeUsername = (?) OR employeeEmail = (?)) AND employeeRole = 'EMPLOYEE'";
 		}
 
 		PreparedStatement pst = null;
 		ResultSet resultSet = null;
-		logger.info("AFTER IF");
 
 		pst = connection.prepareStatement(sql);
 		pst.setString(1, username);
