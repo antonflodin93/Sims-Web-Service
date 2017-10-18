@@ -112,7 +112,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 
 		} else if (userType == UserType.EMPLOYEE) {
 			logger.info("EMPLOYEE");
-			sql = "SELECT employeePassword, employeeSalt FROM employees WHERE employeeUsername = (?) OR employeeEmail = (?)";
+			sql = "SELECT employeePassword, employeeSalt FROM employees WHERE (employeeUsername = (?) OR employeeEmail = (?)) AND employeeRole = 'EMPLOYEE'";
 		}
 
 		PreparedStatement pst = null;

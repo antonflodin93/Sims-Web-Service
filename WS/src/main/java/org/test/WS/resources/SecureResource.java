@@ -28,5 +28,5 @@ public class SecureResource {
 		Response response = Response.status(Response.Status.ACCEPTED).entity("Employee is granted access").build();
 		return response;
 	}
-
+	
 }
