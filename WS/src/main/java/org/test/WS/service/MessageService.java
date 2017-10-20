@@ -20,24 +20,9 @@ public class MessageService {
 	Connection connection;
 	ResultSet resultSet;
 	List<Message> result;
-	private static final Logger logger = Logger.getLogger("MessageService");
 
-	public List<Message> getMessages() /*
-										 * throws SQLException, ClassNotFoundException, SecurityException, IOException
-										 */ {
-		try {
-			FileHandler fh;
-			// This block configure the logger with handler and formatter
-			fh = new FileHandler("C:/Users/Student/Desktop/DEV/Logs2/MyLogFile.log");
-			SimpleFormatter formatter = new SimpleFormatter();
-			fh.setFormatter(formatter);
-			logger.addHandler(fh);
-
-		} catch (IOException e) {
-
-		}
-
-		logger.info("AFTER");
+	public List<Message> getMessages()  {
+		
 
 		try {
 			result = new ArrayList<Message>();
@@ -56,7 +41,7 @@ public class MessageService {
 			pst.close();
 
 		} catch (ClassNotFoundException | SQLException e) {
-			logger.info(e.getMessage());
+		
 
 		}
 

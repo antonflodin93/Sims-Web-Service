@@ -37,16 +37,16 @@ public class SecurityFilter implements ContainerRequestFilter {
 	UserType userType;
 
 	private String username, password;
-	private static final Logger logger = Logger.getLogger("SecurityFilter");
+	//private static final Logger logger = Logger.getLogger("SecurityFilter");
 
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-		FileHandler fh;
+		//FileHandler fh;
 		// This block configure the logger with handler and formatter
-		fh = new FileHandler("C:/Users/Student/Desktop/DEV/Logs/MyLogFile.log");
-		SimpleFormatter formatter = new SimpleFormatter();
-		fh.setFormatter(formatter);
-		logger.addHandler(fh);
+		//fh = new FileHandler("C:/Users/Student/Desktop/DEV/Logs/MyLogFile.log");
+		//SimpleFormatter formatter = new SimpleFormatter();
+		//fh.setFormatter(formatter);
+		//logger.addHandler(fh);
 		
 		// Check if the url consists of the secured url prefix
 		if (requestContext.getUriInfo().getPath().contains(SECURED_URL_PREFIX)) {
@@ -55,11 +55,11 @@ public class SecurityFilter implements ContainerRequestFilter {
 			// Check if the user is employee or master
 			if (requestContext.getUriInfo().getPath().contains(SECURED_MASTER_LOGIN_URL_PREFIX)) {
 				userType = UserType.MASTER;
-				logger.info("MASTER");
+				//logger.info("MASTER");
 				
 			} else if (requestContext.getUriInfo().getPath().contains(SECURED_EMPLOYEE_LOGIN_URL_PREFIX)) {
 				userType = UserType.EMPLOYEE;
-				logger.info("EMPLOYEE");
+				//logger.info("EMPLOYEE");
 			}
 
 			// Get list of the authorization headers
@@ -89,7 +89,7 @@ public class SecurityFilter implements ContainerRequestFilter {
 						return;
 					}
 				} catch (ClassNotFoundException | SQLException e) {
-					logger.info("ERROR: " + e.getMessage());
+					//logger.info("ERROR: " + e.getMessage());
 				}
 
 			}
@@ -114,10 +114,10 @@ public class SecurityFilter implements ContainerRequestFilter {
 		// specific role
 		if (userType == UserType.MASTER) {
 			sql = "SELECT employeePassword, employeeSalt FROM employees WHERE (employeeUsername = (?) OR employeeEmail = (?)) AND employeeRole = 'MASTER'";
-			logger.info("MASTER SQL");
+			//logger.info("MASTER SQL");
 
 		} else if (userType == UserType.EMPLOYEE) {
-			logger.info("EMPLOYEE SQL");
+			//logger.info("EMPLOYEE SQL");
 			sql = "SELECT employeePassword, employeeSalt FROM employees WHERE (employeeUsername = (?) OR employeeEmail = (?)) AND employeeRole = 'EMPLOYEE'";
 		}
 
