@@ -21,7 +21,7 @@ public class MessageService {
 	ResultSet resultSet;
 	List<Message> result;
 
-	public List<Message> getMessages()  {
+	public List<Message> getMessages() throws SQLException  {
 		
 
 		try {
@@ -39,9 +39,10 @@ public class MessageService {
 			}
 
 			pst.close();
+			connection.close();
 
 		} catch (ClassNotFoundException | SQLException e) {
-		
+			connection.close();
 
 		}
 

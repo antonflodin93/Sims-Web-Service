@@ -48,6 +48,7 @@ public class EmployeeService {
 			result.add(m);
 		}
 		pst.close();
+		connection.close();
 
 		return result;
 	}
@@ -68,6 +69,7 @@ public class EmployeeService {
 			employee = null;
 		}
 		pst.close();
+		connection.close();
 		return employee;
 	}
 
@@ -87,6 +89,7 @@ public class EmployeeService {
 			employee = null;
 		}
 		pst.close();
+		connection.close();
 		return employee;
 	}
 
@@ -154,7 +157,9 @@ public class EmployeeService {
 				pst.setString(9, saltString);
 				pst.executeUpdate();
 				pst.close();
+				connection.close();
 			} else {
+				connection.close();
 				// User already exists, return 403
 				 return Response.status(Response.Status.FORBIDDEN)
 				.entity("User already exists, change username and/or email.").build();
@@ -193,6 +198,7 @@ public class EmployeeService {
 		pst.setLong(1, id);
 		pst.executeUpdate();
 		pst.close();
+		connection.close();
 		return e;
 	}
 
