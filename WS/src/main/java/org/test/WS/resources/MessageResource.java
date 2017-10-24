@@ -16,14 +16,29 @@ import org.test.WS.service.MessageService;
 
 @Path("messages")
 public class MessageResource {
-	MessageService messageService = new MessageService();
+	public enum MessageType {
+	    REGULAR,
+	    WARNING;
+	}
+	private MessageType messageType;
+	private MessageService messageService = new MessageService();
+
+	// Return regular messages
+	@GET
+	@Path("/Regular")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Message> getRegularMessages() throws ClassNotFoundException, SQLException {
+		messageType = MessageType.REGULAR;
+		return messageService.getMessages(messageType);
+	}
 
 	// Return messages
 	@GET
+	@Path("/Warning")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Message> getMessages() throws ClassNotFoundException, SQLException {
-
-		return messageService.getMessages();
+	public List<Message> getWarningMessages() throws ClassNotFoundException, SQLException {
+		messageType = MessageType.WARNING;
+		return messageService.getMessages(messageType);
 	}
 
 }
