@@ -25,7 +25,7 @@ public class MessageResource {
 
 	// Return regular messages
 	@GET
-	@Path("/Regular")
+	@Path("/regular")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Message> getRegularMessages() throws ClassNotFoundException, SQLException {
 		messageType = MessageType.REGULAR;
@@ -34,7 +34,7 @@ public class MessageResource {
 
 	// Return messages
 	@GET
-	@Path("/Warning")
+	@Path("/warning")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Message> getWarningMessages() throws ClassNotFoundException, SQLException {
 		messageType = MessageType.WARNING;
