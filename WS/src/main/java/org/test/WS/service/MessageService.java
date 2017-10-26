@@ -55,7 +55,6 @@ public class MessageService {
 	// Add the message to the message table
 	public int addMessage(Message message) throws ClassNotFoundException, SQLException {
 		connection = DBConnection.setDBConnection();
-
 		String sql = "INSERT INTO messages (messageId, messageLabel, messageText, messageType) values(?, ?, ?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 		pst.setLong(1, message.getMessageId());
@@ -78,18 +77,21 @@ public class MessageService {
 
 	public Response addBroadcastMessage(Message message) throws ClassNotFoundException, SQLException {
 		// Add the message in the message table, get id of message
+		int messageId = addMessage(message);	
+		return Response.ok().entity("id: " + messageId).build();
+	}
+
+	public Response addEmployeeMessage(Message message, int employeeId) throws ClassNotFoundException, SQLException {		
 		int messageId = addMessage(message);
-		/*
 		connection = DBConnection.setDBConnection();
-		String sql = "\"INSERT INTO messages (messageId, messageLabel, employeeLastName, employeeUsername, employeeEmail, employeePassword, employeePhonenumber, employeeCompany, employeeSalt) values(?, ?, ?, ?, ?, ?, ?, ?, ?)\";";
+		String sql = "INSERT INTO messageemployee (employeeId, messageId) values(?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
-		pst.setLong(1, id);
+		pst.setLong(1, messageId);
+		pst.setLong(2, employeeId);
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
-*/
-		
-		return Response.ok().entity("id: " + messageId).build();
+		return Response.ok().entity("Message: " + message.getMessageText()).build();
 	}
 
 }
