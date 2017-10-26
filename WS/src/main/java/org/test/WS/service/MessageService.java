@@ -1,6 +1,5 @@
 package org.test.WS.service;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,14 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.FileHandler;
-import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 import javax.ws.rs.core.Response;
 
 import org.test.WS.database.DBConnection;
-import org.test.WS.model.Employee;
 import org.test.WS.model.Message;
 import org.test.WS.resources.MessageResource.MessageType;
 
@@ -77,8 +72,8 @@ public class MessageService {
 
 	public Response addBroadcastMessage(Message message) throws ClassNotFoundException, SQLException {
 		// Add the message in the message table, get id of message
-		int messageId = addMessage(message);	
-		return Response.ok().entity("id: " + messageId).build();
+		addMessage(message);	
+		return Response.ok().build();
 	}
 
 	public Response addEmployeeMessage(Message message, int employeeId) throws ClassNotFoundException, SQLException {		
@@ -91,7 +86,7 @@ public class MessageService {
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
-		return Response.ok().entity("Message: " + message.getMessageText()).build();
+		return Response.ok().build();
 	}
 
 }

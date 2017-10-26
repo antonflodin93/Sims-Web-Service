@@ -12,9 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.test.WS.model.Employee;
 import org.test.WS.model.Message;
-import org.test.WS.service.EmployeeService;
 import org.test.WS.service.MessageService;
 
 @Path("messages")
