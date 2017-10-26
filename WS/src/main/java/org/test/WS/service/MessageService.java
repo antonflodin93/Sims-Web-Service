@@ -5,11 +5,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
+
+import javax.ws.rs.core.Response;
 
 import org.test.WS.database.DBConnection;
 import org.test.WS.model.Employee;
@@ -22,8 +25,7 @@ public class MessageService {
 	ResultSet resultSet;
 	List<Message> result;
 
-	public List<Message> getMessages(MessageType messageType) throws SQLException  {
-		
+	public List<Message> getMessages(MessageType messageType) throws SQLException {
 
 		try {
 			result = new ArrayList<Message>();
@@ -35,7 +37,7 @@ public class MessageService {
 			while (resultSet.next()) {
 
 				Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
-						resultSet.getString("messageText"));
+						resultSet.getString("messageText"), resultSet.getString("messageLabel"), resultSet.getString("messageType"));
 				result.add(m);
 			}
 
@@ -48,6 +50,46 @@ public class MessageService {
 		}
 
 		return result;
+	}
+	
+	// Add the message to the message table
+	public int addMessage(Message message) throws ClassNotFoundException, SQLException {
+		connection = DBConnection.setDBConnection();
+
+		String sql = "INSERT INTO messages (messageId, messageLabel, messageText, messageType) values(?, ?, ?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		pst.setLong(1, message.getMessageId());
+		pst.setString(2, message.getMessageLabel());
+		pst.setString(3, message.getMessageText());
+		pst.setString(4, message.getMessageType());
+		
+		pst.executeUpdate();
+		
+		// Get the message id
+		int messageId = 0;
+		ResultSet rs = pst.getGeneratedKeys();
+		if (rs.next()) {
+		   messageId = rs.getInt(1);
+		}
+		pst.close();
+		connection.close();
+		return messageId;
+	}
+
+	public Response addBroadcastMessage(Message message) throws ClassNotFoundException, SQLException {
+		// Add the message in the message table, get id of message
+		int messageId = addMessage(message);
+		/*
+		connection = DBConnection.setDBConnection();
+		String sql = "\"INSERT INTO messages (messageId, messageLabel, employeeLastName, employeeUsername, employeeEmail, employeePassword, employeePhonenumber, employeeCompany, employeeSalt) values(?, ?, ?, ?, ?, ?, ?, ?, ?)\";";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, id);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+*/
+		
+		return Response.ok().entity("id: " + messageId).build();
 	}
 
 }

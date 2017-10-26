@@ -3,7 +3,9 @@ package org.test.WS.resources;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -17,9 +19,9 @@ import org.test.WS.service.MessageService;
 @Path("messages")
 public class MessageResource {
 	public enum MessageType {
-	    REGULAR,
-	    WARNING;
+		REGULAR, WARNING;
 	}
+
 	private MessageType messageType;
 	private MessageService messageService = new MessageService();
 
@@ -32,13 +34,23 @@ public class MessageResource {
 		return messageService.getMessages(messageType);
 	}
 
-	// Return messages
+	// Return warning messages
 	@GET
 	@Path("/warning")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Message> getWarningMessages() throws ClassNotFoundException, SQLException {
 		messageType = MessageType.WARNING;
 		return messageService.getMessages(messageType);
+	}
+
+	// Insert broadcast message in database
+	@POST
+	@Path("/regular")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addBroadcastMessage(Message message) throws ClassNotFoundException, SQLException {
+
+		return messageService.addBroadcastMessage(message);
 	}
 
 }
