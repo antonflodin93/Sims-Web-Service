@@ -32,7 +32,7 @@ public class EmployeeService {
 
 	}
 
-	// Returns all the messages
+	// Returns all employees
 	public List<Employee> getEmployees() throws SQLException, ClassNotFoundException {
 
 		result = new ArrayList<Employee>();
@@ -42,9 +42,10 @@ public class EmployeeService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
-			Employee m = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2),
-					resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6),
-					resultSet.getString(7), resultSet.getString(8));
+			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")), resultSet.getString("employeeFirstName"),
+					resultSet.getString("employeeLastName"), resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"), resultSet.getString("employeePhonenumber"),
+					resultSet.getString("employeeCompany"));			
+			
 			result.add(m);
 		}
 		pst.close();
@@ -62,9 +63,9 @@ public class EmployeeService {
 		resultSet = pst.executeQuery();
 		Employee employee = new Employee();
 		if (resultSet.next() == true) {
-			employee = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2),
-					resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6),
-					resultSet.getString(7), resultSet.getString(8));
+			employee = new Employee(Integer.parseInt(resultSet.getString("employeeId")), resultSet.getString("employeeFirstName"),
+					resultSet.getString("employeeLastName"), resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"), resultSet.getString("employeePhonenumber"),
+					resultSet.getString("employeeCompany"));	
 		} else {
 			employee = null;
 		}
@@ -82,9 +83,9 @@ public class EmployeeService {
 		resultSet = pst.executeQuery();
 		Employee employee = new Employee();
 		if (resultSet.next() == true) {
-			employee = new Employee(Integer.parseInt(resultSet.getString(1)), resultSet.getString(2),
-					resultSet.getString(3), resultSet.getString(4), resultSet.getString(5), resultSet.getString(6),
-					resultSet.getString(7), resultSet.getString(8));
+			employee = new Employee(Integer.parseInt(resultSet.getString("employeeId")), resultSet.getString("employeeFirstName"),
+					resultSet.getString("employeeLastName"), resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"), resultSet.getString("employeePhonenumber"),
+					resultSet.getString("employeeCompany"));
 		} else {
 			employee = null;
 		}
@@ -95,6 +96,30 @@ public class EmployeeService {
 
 	// Inserts employee into db
 	public Response addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
+		// Check if the company of the employee exists
+		String company = employee.getEmployeeCompany();
+		connection = DBConnection.setDBConnection();
+		String sql = "Select * from company where companyName = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setString(1, company);
+		resultSet = pst.executeQuery();
+
+		// If the company does not exists
+		if (resultSet.next() == false) {
+			pst.close();
+			connection.close();
+			// Insert the company in DB
+			connection = DBConnection.setDBConnection();
+			sql = "INSERT INTO company (companyName) values(?)";
+			pst = connection.prepareStatement(sql);
+			pst.setString(1, company);
+			pst.executeUpdate();
+
+		}
+
+
+		pst.close();
+		connection.close();
 
 		// Generate salt
 		byte[] salt = new byte[16];
@@ -118,8 +143,8 @@ public class EmployeeService {
 
 		} catch (NoSuchAlgorithmException e) {
 			// Return status 500 if algorithm not found
-			 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-			 .entity("Could not successfully hash the password").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity("Could not successfully hash the password").build();
 		}
 
 		byte byteData[] = md.digest();
@@ -143,9 +168,9 @@ public class EmployeeService {
 			// If user do not exists
 			if (resultSet.next() == false) {
 				// Insert into db
-				String sql = "INSERT INTO employees (employeeId, employeeFirstName, employeeLastName, employeeUsername, "
+				sql = "INSERT INTO employees (employeeId, employeeFirstName, employeeLastName, employeeUsername, "
 						+ "employeeEmail, employeePassword, employeePhonenumber, employeeCompany, employeeSalt) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-				PreparedStatement pst = connection.prepareStatement(sql);
+				pst = connection.prepareStatement(sql);
 				pst.setLong(1, employee.getEmployeeId());
 				pst.setString(2, employee.getEmployeeFirstName());
 				pst.setString(3, employee.getEmployeeLastName());
@@ -161,30 +186,16 @@ public class EmployeeService {
 			} else {
 				connection.close();
 				// User already exists, return 403
-				 return Response.status(Response.Status.FORBIDDEN)
-				.entity("User already exists, change username and/or email.").build();
+				return Response.status(Response.Status.FORBIDDEN)
+						.entity("User already exists, change username and/or email.").build();
 			}
 
 		} catch (SQLException e) {
-			 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-			 .entity("Could not successfully store the user information").build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+					.entity("Could not successfully store the user information: " + e.getMessage()).build();
 		}
-		/*
-		try {
-			ObjectMapper mapper = new ObjectMapper();
 
-			// Object to JSON in String
-			String jsonInString = mapper.writeValueAsString(employee);
-			 return Response.ok(jsonInString, MediaType.APPLICATION_JSON).build();
-
-		} catch (JsonProcessingException e) {
-			 return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-			 .entity("Could not successfully return information correctly").build();
-
-		}
-*/
-			return Response.ok().build();
-
+		return Response.ok().build();
 	}
 
 	public Employee deleteEmployeeById(int id) throws SQLException, ClassNotFoundException {

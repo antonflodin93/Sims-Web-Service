@@ -47,7 +47,7 @@ public class EmployeeResource {
 		return employeeService.getEmployeeByUsername(username);
 	}
 
-	// Insert an employee in database, returns employee
+	// Insert an employee in database
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

@@ -22,7 +22,7 @@ public class Employee {
 
 
 	public Employee(int employeeId, String employeeFirstName, String employeeLastName, String employeeUsername,
-			String employeeEmail, String employeePassword, String employeePhonenumber, String employeeCompany) {
+			String employeeEmail, String employeePhonenumber, String employeeCompany) {
 		super();
 		this.employeeId = employeeId;
 		this.employeeFirstName = employeeFirstName;
