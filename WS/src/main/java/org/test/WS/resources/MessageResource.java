@@ -51,18 +51,27 @@ public class MessageResource {
 
 		return messageService.addBroadcastMessage(message);
 	}
-	
-	
+
 	// Insert message for employee
 	@POST
-	@Path("/regular/{employeeId}")
+	@Path("/regular/employee/{employeeId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addEmployeeMessage(@PathParam("employeeId") int employeeId, Message message) throws ClassNotFoundException, SQLException {
-		
+	public Response addEmployeeMessage(@PathParam("employeeId") int employeeId, Message message)
+			throws ClassNotFoundException, SQLException {
+
 		return messageService.addEmployeeMessage(message, employeeId);
 	}
-	
+
 	// Insert message for a company
-	
+	@POST
+	@Path("/regular/company/{companyName}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addCompanyMessage(@PathParam("companyName") String companyName, Message message)
+			throws ClassNotFoundException, SQLException {
+
+		return messageService.addCompanyMessage(message, companyName);
+	}
+
 }

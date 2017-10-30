@@ -79,10 +79,23 @@ public class MessageService {
 	public Response addEmployeeMessage(Message message, int employeeId) throws ClassNotFoundException, SQLException {		
 		int messageId = addMessage(message);
 		connection = DBConnection.setDBConnection();
-		String sql = "INSERT INTO messageemployee (employeeId, messageId) values(?, ?)";
+		String sql = "INSERT INTO messageemployee (messageId, employeeId) values(?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, messageId);
 		pst.setLong(2, employeeId);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+		return Response.ok().build();
+	}
+	
+	public Response addCompanyMessage(Message message, String companyName) throws ClassNotFoundException, SQLException {		
+		int messageId = addMessage(message);
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO messagecompany (messageId, companyName) values(?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, messageId);
+		pst.setString(2, companyName);
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
