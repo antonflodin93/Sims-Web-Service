@@ -33,7 +33,7 @@ public class EmployeeResource {
 	@GET
 	@Path("userid/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Employee getEmployeeById(@PathParam("id") String id) throws ClassNotFoundException, SQLException {
+	public Response getEmployeeById(@PathParam("id") String id) throws ClassNotFoundException, SQLException {
 		int theid = Integer.parseInt(id);
 		return employeeService.getEmployeeById(theid);
 	}
@@ -42,7 +42,7 @@ public class EmployeeResource {
 	@GET
 	@Path("username/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Employee getEmployeeByUsername(@PathParam("username") String username)
+	public Response getEmployeeByUsername(@PathParam("username") String username)
 			throws ClassNotFoundException, SQLException {
 		return employeeService.getEmployeeByUsername(username);
 	}
@@ -59,7 +59,7 @@ public class EmployeeResource {
 	// Delete an employee in database, returns employee
 	@DELETE
 	@Path("{id}")
-	public Employee deleteEmployeeById(@PathParam("id") int id) throws ClassNotFoundException, SQLException {
+	public Response deleteEmployeeById(@PathParam("id") int id) throws ClassNotFoundException, SQLException {
 		return employeeService.deleteEmployeeById(id);
 	}
 
@@ -67,7 +67,8 @@ public class EmployeeResource {
 	@GET
 	@Path("{company}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Employee> getEmployeesInCompany(@PathParam("company") String company) throws ClassNotFoundException, SQLException {
+	public List<Employee> getEmployeesInCompany(@PathParam("company") String company)
+			throws ClassNotFoundException, SQLException {
 		return employeeService.getEmployeesInCompany(company);
 	}
 
