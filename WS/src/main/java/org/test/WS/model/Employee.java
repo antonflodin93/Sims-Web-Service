@@ -29,7 +29,6 @@ public class Employee {
 		this.employeeLastName = employeeLastName;
 		this.employeeUsername = employeeUsername;
 		this.employeeEmail = employeeEmail;
-		this.employeePassword = employeePassword;
 		this.employeePhonenumber = employeePhonenumber;
 		this.employeeCompany = employeeCompany;
 	}
