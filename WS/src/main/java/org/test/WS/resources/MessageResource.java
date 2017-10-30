@@ -53,6 +53,16 @@ public class MessageResource {
 	}
 
 	// Insert message for employee
+	@GET
+	@Path("/regular/employee/{employeeId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Message> getEmployeeMessage(@PathParam("employeeId") int employeeId)
+			throws ClassNotFoundException, SQLException {
+
+		return messageService.getEmployeeMessage(employeeId);
+	}
+	
+	// Get messages for employee
 	@POST
 	@Path("/regular/employee/{employeeId}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -62,7 +72,8 @@ public class MessageResource {
 
 		return messageService.addEmployeeMessage(message, employeeId);
 	}
-
+	
+	
 	// Insert message for a company
 	@POST
 	@Path("/regular/company/{companyName}")

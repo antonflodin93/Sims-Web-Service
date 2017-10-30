@@ -11,6 +11,7 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import org.test.WS.database.DBConnection;
+import org.test.WS.model.Employee;
 import org.test.WS.model.Message;
 import org.test.WS.resources.MessageResource.MessageType;
 
@@ -18,12 +19,12 @@ public class MessageService {
 	DBConnection dBconnection;
 	Connection connection;
 	ResultSet resultSet;
-	List<Message> result;
+	List<Message> messages;
 
 	public List<Message> getMessages(MessageType messageType) throws SQLException {
 
 		try {
-			result = new ArrayList<Message>();
+			messages = new ArrayList<Message>();
 			connection = DBConnection.setDBConnection();
 			String sql = "SELECT * from messages WHERE messageType = '" + messageType.name() + "'";
 			PreparedStatement pst = connection.prepareStatement(sql);
@@ -33,7 +34,7 @@ public class MessageService {
 
 				Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
 						resultSet.getString("messageText"), resultSet.getString("messageLabel"), resultSet.getString("messageType"));
-				result.add(m);
+				messages.add(m);
 			}
 
 			pst.close();
@@ -44,7 +45,7 @@ public class MessageService {
 
 		}
 
-		return result;
+		return messages;
 	}
 	
 	// Add the message to the message table
@@ -89,6 +90,25 @@ public class MessageService {
 		return Response.ok().build();
 	}
 	
+	public List<Message> getEmployeeMessage(int employeeId) throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM messages INNER JOIN messageemployee ON messages.messageId = messageemployee.messageId AND messageemployee.employeeId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, employeeId);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")), resultSet.getString("messageText"), resultSet.getString("messageLabel"), resultSet.getString("messageType"));			
+			
+			messages.add(m);
+		}
+		pst.close();
+		connection.close();
+		
+		return messages;
+	}
+	
 	public Response addCompanyMessage(Message message, String companyName) throws ClassNotFoundException, SQLException {		
 		int messageId = addMessage(message);
 		connection = DBConnection.setDBConnection();
@@ -101,5 +121,4 @@ public class MessageService {
 		connection.close();
 		return Response.ok().build();
 	}
-
 }
