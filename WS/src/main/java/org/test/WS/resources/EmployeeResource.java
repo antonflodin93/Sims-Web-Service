@@ -63,4 +63,12 @@ public class EmployeeResource {
 		return employeeService.deleteEmployeeById(id);
 	}
 
+	// Returns all employees in a company
+	@GET
+	@Path("{company}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Employee> getEmployeesInCompany(@PathParam("company") String company) throws ClassNotFoundException, SQLException {
+		return employeeService.getEmployeesInCompany(company);
+	}
+
 }

@@ -9,15 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import org.test.WS.model.Employee;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.test.WS.database.DBConnection;
 
 // Used for returning messages using DB
@@ -211,6 +204,26 @@ public class EmployeeService {
 		pst.close();
 		connection.close();
 		return e;
+	}
+
+	public List<Employee> getEmployeesInCompany(String company) throws ClassNotFoundException, SQLException {
+		result = new ArrayList<Employee>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * from employees where employeeCompany = '" + company + "'";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")), resultSet.getString("employeeFirstName"),
+					resultSet.getString("employeeLastName"), resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"), resultSet.getString("employeePhonenumber"),
+					resultSet.getString("employeeCompany"));			
+			
+			result.add(m);
+		}
+		pst.close();
+		connection.close();
+
+		return result;
 	}
 
 }
