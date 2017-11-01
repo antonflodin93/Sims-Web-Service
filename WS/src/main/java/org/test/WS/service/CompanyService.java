@@ -18,8 +18,8 @@ public class CompanyService {
 	List<Company> companies;
 
 	// Returns all companies
-	public List<Company> getAllCompanies() throws SQLException {
-		try {
+	public List<Company> getAllCompanies() throws ClassNotFoundException, SQLException {
+		
 			companies = new ArrayList<Company>();
 			connection = DBConnection.setDBConnection();
 			String sql = "SELECT * from companies";
@@ -35,10 +35,6 @@ public class CompanyService {
 			pst.close();
 			connection.close();
 
-		} catch (ClassNotFoundException | SQLException e) {
-			connection.close();
-
-		}
 
 		return companies;
 	}

@@ -7,9 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.ws.rs.core.Response;
-
 import org.test.WS.database.DBConnection;
 import org.test.WS.model.Message;
 import org.test.WS.resources.MessageResource.MessageType;
@@ -20,33 +17,28 @@ public class MessageService {
 	ResultSet resultSet;
 	List<Message> messages;
 
-	public List<Message> getMessages(MessageType messageType) throws SQLException {
+	public List<Message> getMessages(MessageType messageType) throws SQLException, ClassNotFoundException {
 
-		try {
-			messages = new ArrayList<Message>();
-			connection = DBConnection.setDBConnection();
-			String sql = "SELECT * from messages WHERE messageType = '" + messageType.name() + "'";
-			PreparedStatement pst = connection.prepareStatement(sql);
-			resultSet = pst.executeQuery();
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * from messages WHERE messageType = '" + messageType.name() + "'";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		resultSet = pst.executeQuery();
 
-			while (resultSet.next()) {
+		while (resultSet.next()) {
 
-				Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
-						resultSet.getString("messageText"), resultSet.getString("messageLabel"), resultSet.getString("messageType"));
-				messages.add(m);
-			}
-
-			pst.close();
-			connection.close();
-
-		} catch (ClassNotFoundException | SQLException e) {
-			connection.close();
-
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
+					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
+					resultSet.getString("messageType"));
+			messages.add(m);
 		}
+
+		pst.close();
+		connection.close();
 
 		return messages;
 	}
-	
+
 	// Add the message to the message table
 	public int addMessage(Message message) throws ClassNotFoundException, SQLException {
 		connection = DBConnection.setDBConnection();
@@ -56,27 +48,26 @@ public class MessageService {
 		pst.setString(2, message.getMessageLabel());
 		pst.setString(3, message.getMessageText());
 		pst.setString(4, message.getMessageType());
-		
+
 		pst.executeUpdate();
-		
+
 		// Get the message id
 		int messageId = 0;
 		ResultSet rs = pst.getGeneratedKeys();
 		if (rs.next()) {
-		   messageId = rs.getInt(1);
+			messageId = rs.getInt(1);
 		}
 		pst.close();
 		connection.close();
 		return messageId;
 	}
 
-	public Response addBroadcastMessage(Message message) throws ClassNotFoundException, SQLException {
+	public void addBroadcastMessage(Message message) throws ClassNotFoundException, SQLException {
 		// Add the message in the message table, get id of message
-		addMessage(message);	
-		return Response.ok().build();
+		addMessage(message);
 	}
 
-	public Response addEmployeeMessage(Message message, int employeeId) throws ClassNotFoundException, SQLException {		
+	public void addEmployeeMessage(Message message, int employeeId) throws ClassNotFoundException, SQLException {
 		int messageId = addMessage(message);
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO messageemployee (messageId, employeeId) values(?, ?)";
@@ -86,9 +77,8 @@ public class MessageService {
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
-		return Response.ok().build();
 	}
-	
+
 	public List<Message> getEmployeeMessage(int employeeId) throws ClassNotFoundException, SQLException {
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
@@ -98,17 +88,19 @@ public class MessageService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
-			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")), resultSet.getString("messageText"), resultSet.getString("messageLabel"), resultSet.getString("messageType"));			
-			
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
+					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
+					resultSet.getString("messageType"));
+
 			messages.add(m);
 		}
 		pst.close();
 		connection.close();
-		
+
 		return messages;
 	}
-	
-	public Response addCompanyMessage(Message message, String companyName) throws ClassNotFoundException, SQLException {		
+
+	public void addCompanyMessage(Message message, String companyName) throws ClassNotFoundException, SQLException {
 		int messageId = addMessage(message);
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO messagecompany (messageId, companyName) values(?, ?)";
@@ -118,7 +110,6 @@ public class MessageService {
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
-		return Response.ok().build();
 	}
 
 	public List<Message> getCompanyMessage(String companyName) throws ClassNotFoundException, SQLException {
@@ -130,13 +121,15 @@ public class MessageService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
-			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")), resultSet.getString("messageText"), resultSet.getString("messageLabel"), resultSet.getString("messageType"));			
-			
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
+					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
+					resultSet.getString("messageType"));
+
 			messages.add(m);
 		}
 		pst.close();
 		connection.close();
-		
+
 		return messages;
 	}
 }

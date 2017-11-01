@@ -9,7 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.core.Response;
 import org.test.WS.model.Employee;
 import org.test.WS.database.DBConnection;
 
@@ -35,20 +34,21 @@ public class EmployeeService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
-			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")), resultSet.getString("employeeFirstName"),
-					resultSet.getString("employeeLastName"), resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"), resultSet.getString("employeePhonenumber"),
-					resultSet.getString("employeeCompany"));			
-			
+			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")),
+					resultSet.getString("employeeFirstName"), resultSet.getString("employeeLastName"),
+					resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"),
+					resultSet.getString("employeePhonenumber"), resultSet.getString("employeeCompany"));
+
 			employees.add(m);
 		}
 		pst.close();
 		connection.close();
-		
+
 		return employees;
 	}
 
 	// Returns employee with id
-	public Response getEmployeeById(int id) throws SQLException, ClassNotFoundException {
+	public Employee getEmployeeById(int id) throws SQLException, ClassNotFoundException {
 		connection = DBConnection.setDBConnection();
 		String sql = "Select * from employees where employeeID = ?";
 		PreparedStatement pst = connection.prepareStatement(sql);
@@ -56,19 +56,20 @@ public class EmployeeService {
 		resultSet = pst.executeQuery();
 		Employee employee = new Employee();
 		if (resultSet.next() == true) {
-			employee = new Employee(Integer.parseInt(resultSet.getString("employeeId")), resultSet.getString("employeeFirstName"),
-					resultSet.getString("employeeLastName"), resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"), resultSet.getString("employeePhonenumber"),
-					resultSet.getString("employeeCompany"));	
+			employee = new Employee(Integer.parseInt(resultSet.getString("employeeId")),
+					resultSet.getString("employeeFirstName"), resultSet.getString("employeeLastName"),
+					resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"),
+					resultSet.getString("employeePhonenumber"), resultSet.getString("employeeCompany"));
 		} else {
 			employee = null;
 		}
 		pst.close();
 		connection.close();
-		return Response.ok().entity(employee).build();
+		return employee;
 	}
 
 	// Returns employee with username
-	public Response getEmployeeByUsername(String username) throws SQLException, ClassNotFoundException {
+	public Employee getEmployeeByUsername(String username) throws SQLException, ClassNotFoundException {
 		connection = DBConnection.setDBConnection();
 		String sql = "Select * from employees where employeeUsername = ?";
 		PreparedStatement pst = connection.prepareStatement(sql);
@@ -76,19 +77,20 @@ public class EmployeeService {
 		resultSet = pst.executeQuery();
 		Employee employee = new Employee();
 		if (resultSet.next() == true) {
-			employee = new Employee(Integer.parseInt(resultSet.getString("employeeId")), resultSet.getString("employeeFirstName"),
-					resultSet.getString("employeeLastName"), resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"), resultSet.getString("employeePhonenumber"),
-					resultSet.getString("employeeCompany"));
+			employee = new Employee(Integer.parseInt(resultSet.getString("employeeId")),
+					resultSet.getString("employeeFirstName"), resultSet.getString("employeeLastName"),
+					resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"),
+					resultSet.getString("employeePhonenumber"), resultSet.getString("employeeCompany"));
 		} else {
 			employee = null;
 		}
 		pst.close();
 		connection.close();
-		return Response.ok().entity(employee).build();
+		return employee;
 	}
 
 	// Inserts employee into db
-	public Response addEmployee(Employee employee) throws ClassNotFoundException, SQLException {
+	public boolean addEmployee(Employee employee) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		// Check if the company of the employee exists
 		String company = employee.getEmployeeCompany();
 		connection = DBConnection.setDBConnection();
@@ -110,7 +112,6 @@ public class EmployeeService {
 
 		}
 
-
 		pst.close();
 		connection.close();
 
@@ -129,16 +130,9 @@ public class EmployeeService {
 		String passwordandsalt = employee.getEmployeePassword() + saltString;
 		MessageDigest md = null;
 
-		try {
-			// Hash it
-			md = MessageDigest.getInstance("SHA-256");
-			md.update(passwordandsalt.getBytes());
-
-		} catch (NoSuchAlgorithmException e) {
-			// Return status 500 if algorithm not found
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Could not successfully hash the password").build();
-		}
+		// Hash it
+		md = MessageDigest.getInstance("SHA-256");
+		md.update(passwordandsalt.getBytes());
 
 		byte byteData[] = md.digest();
 
@@ -149,7 +143,7 @@ public class EmployeeService {
 
 		String hash = sb.toString();
 
-		try {
+	
 			connection = DBConnection.setDBConnection();
 			// Check if user exists
 			String checkIfExistsSql = "Select * from employees where employeeUsername = ? || employeeEmail = ?";
@@ -178,20 +172,14 @@ public class EmployeeService {
 				connection.close();
 			} else {
 				connection.close();
-				// User already exists, return 403
-				return Response.status(Response.Status.FORBIDDEN)
-						.entity("User already exists, change username and/or email.").build();
+				// User already exists, return false
+				return false;
 			}
-
-		} catch (SQLException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity("Could not successfully store the user information: " + e.getMessage()).build();
-		}
-
-		return Response.ok().build();
+			
+			return true;
 	}
 
-	public Response deleteEmployeeById(int id) throws SQLException, ClassNotFoundException {
+	public void deleteEmployeeById(int id) throws SQLException, ClassNotFoundException {
 		connection = DBConnection.setDBConnection();
 		String sql = "DELETE FROM employees WHERE employeeId = ?";
 		PreparedStatement pst = connection.prepareStatement(sql);
@@ -199,7 +187,7 @@ public class EmployeeService {
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
-		return Response.ok().build();
+		
 	}
 
 	public List<Employee> getEmployeesInCompany(String company) throws ClassNotFoundException, SQLException {
@@ -210,10 +198,11 @@ public class EmployeeService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
-			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")), resultSet.getString("employeeFirstName"),
-					resultSet.getString("employeeLastName"), resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"), resultSet.getString("employeePhonenumber"),
-					resultSet.getString("employeeCompany"));			
-			
+			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")),
+					resultSet.getString("employeeFirstName"), resultSet.getString("employeeLastName"),
+					resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"),
+					resultSet.getString("employeePhonenumber"), resultSet.getString("employeeCompany"));
+
 			employees.add(m);
 		}
 		pst.close();
