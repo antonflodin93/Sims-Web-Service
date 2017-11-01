@@ -11,7 +11,6 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import org.test.WS.database.DBConnection;
-import org.test.WS.model.Employee;
 import org.test.WS.model.Message;
 import org.test.WS.resources.MessageResource.MessageType;
 
@@ -120,5 +119,24 @@ public class MessageService {
 		pst.close();
 		connection.close();
 		return Response.ok().build();
+	}
+
+	public List<Message> getCompanyMessage(String companyName) throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM messages INNER JOIN messagecompany ON messages.messageId = messagecompany.messageId AND messagecompany.companyName = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setString(1, companyName);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")), resultSet.getString("messageText"), resultSet.getString("messageLabel"), resultSet.getString("messageType"));			
+			
+			messages.add(m);
+		}
+		pst.close();
+		connection.close();
+		
+		return messages;
 	}
 }
