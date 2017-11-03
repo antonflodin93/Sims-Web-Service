@@ -113,7 +113,7 @@ public class EmployeeResource {
 
 	// Returns all employees in a company
 	@GET
-	@Path("{company}")
+	@Path("company/{company}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getEmployeesInCompany(@PathParam("company") String company)
 			throws ClassNotFoundException, SQLException {
