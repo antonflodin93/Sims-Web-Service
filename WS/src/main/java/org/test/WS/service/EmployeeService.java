@@ -29,7 +29,7 @@ public class EmployeeService {
 
 		employees = new ArrayList<Employee>();
 		connection = DBConnection.setDBConnection();
-		String sql = "SELECT * from employees";
+		String sql = "SELECT * from employees WHERE employeeRole = 'EMPLOYEE' ";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		resultSet = pst.executeQuery();
 
@@ -50,7 +50,7 @@ public class EmployeeService {
 	// Returns employee with id
 	public Employee getEmployeeById(int id) throws SQLException, ClassNotFoundException {
 		connection = DBConnection.setDBConnection();
-		String sql = "Select * from employees where employeeID = ?";
+		String sql = "Select * from employees where employeeID = ? AND employeeRole = 'EMPLOYEE'";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, id);
 		resultSet = pst.executeQuery();
@@ -71,7 +71,7 @@ public class EmployeeService {
 	// Returns employee with username
 	public Employee getEmployeeByUsername(String username) throws SQLException, ClassNotFoundException {
 		connection = DBConnection.setDBConnection();
-		String sql = "Select * from employees where employeeUsername = ?";
+		String sql = "Select * from employees where employeeUsername = ? AND employeeRole = 'EMPLOYEE'";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setString(1, username);
 		resultSet = pst.executeQuery();
@@ -193,7 +193,7 @@ public class EmployeeService {
 	public List<Employee> getEmployeesInCompany(String company) throws ClassNotFoundException, SQLException {
 		employees = new ArrayList<Employee>();
 		connection = DBConnection.setDBConnection();
-		String sql = "SELECT * from employees where employeeCompany = '" + company + "'";
+		String sql = "SELECT * from employees where employeeCompany = '" + company + "' AND employeeRole = 'EMPLOYEE'";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		resultSet = pst.executeQuery();
 
