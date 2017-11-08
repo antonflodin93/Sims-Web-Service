@@ -56,7 +56,7 @@ public class EmployeeResource {
 		return Response.ok(employee).build();
 	}
 
-	// Returns employee with a certain username
+	// Returns employee with a username
 	@GET
 	@Path("username/{username}")
 	@Produces(MediaType.APPLICATION_JSON)
