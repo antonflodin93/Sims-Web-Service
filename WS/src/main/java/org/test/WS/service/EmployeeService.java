@@ -94,7 +94,7 @@ public class EmployeeService {
 		// Check if the company of the employee exists
 		String company = employee.getEmployeeCompany();
 		connection = DBConnection.setDBConnection();
-		String sql = "Select * from company where companyName = ?";
+		String sql = "Select * from companies where companyName = ?";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setString(1, company);
 		resultSet = pst.executeQuery();
