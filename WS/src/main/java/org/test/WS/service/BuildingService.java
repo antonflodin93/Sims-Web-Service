@@ -39,7 +39,8 @@ public class BuildingService {
 				
 				// Create floor objects
 				while (resultSetFloors.next()) {
-					Floor floor = new Floor(Integer.parseInt(resultSetFloors.getString("floorId")), resultSetFloors.getString("floorLevel"), resultSetFloors.getString("floorPlanFilePath"));
+					Floor floor = new Floor(Integer.parseInt(resultSetFloors.getString("floorId")), 
+							resultSetFloors.getString("floorLevel"), resultSetFloors.getString("floorPlanFilePath"), Integer.parseInt(resultSetFloors.getString("floorBuildingId")));
 					floors.add(floor);
 				}
 				pstFloors.close();
