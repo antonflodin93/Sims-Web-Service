@@ -6,6 +6,7 @@ public class Building {
 
     private int buildingId;
     private String buildingName;
+    private ArrayList<Floor> floors;
     
     Building(){
     	
@@ -14,15 +15,17 @@ public class Building {
     
     
     
-	public Building(int buildingId, String buildingName) {
+	public Building(int buildingId, String buildingName, ArrayList<Floor> floors) {
 		super();
 		this.buildingId = buildingId;
 		this.buildingName = buildingName;
+		this.floors = floors;
 	}
 	
-	public Building(String buildingName) {
+	public Building(String buildingName, ArrayList<Floor> floors) {
 		super();
 		this.buildingName = buildingName;
+		this.floors = floors;
 	}
 
 
@@ -39,6 +42,20 @@ public class Building {
 	}
 	public void setBuildingName(String buildingName) {
 		this.buildingName = buildingName;
+	}
+
+
+
+
+	public ArrayList<Floor> getFloors() {
+		return floors;
+	}
+
+
+
+
+	public void setFloors(ArrayList<Floor> floors) {
+		this.floors = floors;
 	}
 
     
