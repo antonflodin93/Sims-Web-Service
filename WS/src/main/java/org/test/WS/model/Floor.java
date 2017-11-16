@@ -1,10 +1,13 @@
 package org.test.WS.model;
 
+import java.util.ArrayList;
+
 public class Floor {
     private int floorId;
     private String floorLevel;
     private String floorPlanFilePath;
     private int floorBuildingId;
+    private ArrayList<FactoryObject> objects;
 
     Floor() {
     	
@@ -12,8 +15,8 @@ public class Floor {
     
     
 
+	
 	public Floor(int floorId, String floorLevel, String floorPlanFilePath, int floorBuildingId) {
-		super();
 		this.floorId = floorId;
 		this.floorLevel = floorLevel;
 		this.floorPlanFilePath = floorPlanFilePath;
@@ -21,15 +24,15 @@ public class Floor {
 	}
 	
 	
-
-
-
-	public Floor(String floorLevel, String floorPlanFilePath, int floorBuildingId) {
-		super();
+	public Floor(int floorId, String floorLevel, String floorPlanFilePath, int floorBuildingId,  ArrayList<FactoryObject> objects) {
+		this.floorId = floorId;
 		this.floorLevel = floorLevel;
 		this.floorPlanFilePath = floorPlanFilePath;
 		this.floorBuildingId = floorBuildingId;
+		this.objects = objects;
 	}
+
+
 
 
 
@@ -68,6 +71,25 @@ public class Floor {
 	public void setFloorBuildingId(int floorBuildingId) {
 		this.floorBuildingId = floorBuildingId;
 	}
+
+
+
+
+	public ArrayList<FactoryObject> getObjects() {
+		return objects;
+	}
+
+
+
+
+	public void setObjects(ArrayList<FactoryObject> objects) {
+		this.objects = objects;
+	}
+	
+	
+
+
+
     
     
     

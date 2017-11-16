@@ -9,6 +9,7 @@ import java.util.List;
 import org.test.WS.database.DBConnection;
 import org.test.WS.model.Building;
 import org.test.WS.model.Floor;
+import org.test.WS.model.FactoryObject;
 
 public class BuildingService {
 	DBConnection dBconnection;
@@ -39,8 +40,31 @@ public class BuildingService {
 				
 				// Create floor objects
 				while (resultSetFloors.next()) {
+					
+					// Get the id of the floor
+					int floorId = Integer.parseInt(resultSetFloors.getString("floorId"));
+					
+					ArrayList<FactoryObject> objects = new ArrayList<FactoryObject>();
+					
+					Connection innerInnerConnection = DBConnection.setDBConnection();
+					String sqlObjects = "SELECT * from objects where objectFloorId = ?";
+					PreparedStatement pstObjects = connection.prepareStatement(sqlObjects);
+					pstObjects.setLong(1, floorId);
+					ResultSet resultSetObjects = pstObjects.executeQuery();
+					
+					// Create floorObjects
+					while (resultSetObjects.next()) {
+						FactoryObject object = new FactoryObject(Integer.parseInt(resultSetObjects.getString("objectId")), resultSetObjects.getString("objectName"), Integer.parseInt(resultSetObjects.getString("objectFloorId")));
+						objects.add(object);
+				
+					
+					}
+					pstObjects.close();
+					innerInnerConnection.close();
+					
+									
 					Floor floor = new Floor(Integer.parseInt(resultSetFloors.getString("floorId")), 
-							resultSetFloors.getString("floorLevel"), resultSetFloors.getString("floorPlanFilePath"), Integer.parseInt(resultSetFloors.getString("floorBuildingId")));
+							resultSetFloors.getString("floorLevel"), resultSetFloors.getString("floorPlanFilePath"), Integer.parseInt(resultSetFloors.getString("floorBuildingId")), objects);
 					floors.add(floor);
 				}
 				pstFloors.close();
