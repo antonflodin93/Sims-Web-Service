@@ -105,7 +105,7 @@ public class EmployeeService {
 			connection.close();
 			// Insert the company in DB
 			connection = DBConnection.setDBConnection();
-			sql = "INSERT INTO company (companyName) values(?)";
+			sql = "INSERT INTO companies (companyName) values(?)";
 			pst = connection.prepareStatement(sql);
 			pst.setString(1, company);
 			pst.executeUpdate();
