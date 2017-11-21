@@ -41,12 +41,11 @@ public class FloorService {
 			// Create floor objects
 			while (resultSetObjects.next()) {
 				
-				FactoryObject object = new FactoryObject(Integer.parseInt(resultSetObjects.getString("objectId")), resultSetObjects.getString("objectName"), Integer.parseInt(resultSetObjects.getString("objectFloorId")));
+				FactoryObject object = new FactoryObject(Integer.parseInt(resultSetObjects.getString("objectId")), resultSetObjects.getString("objectName"), Integer.parseInt(resultSetObjects.getString("objectFloorId")),
+						Integer.parseInt(resultSetObjects.getString("areaXStart")), Integer.parseInt(resultSetObjects.getString("areaXEnd")), Integer.parseInt(resultSetObjects.getString("areaYStart")), Integer.parseInt(resultSetObjects.getString("areaYEnd")));
 				objects.add(object);
 			}
-					
-			objects.add(new FactoryObject(234, "TEst", 243));
-							
+											
 		
 			Floor floor = new Floor(Integer.parseInt(resultSet.getString("floorId")), 
 						resultSet.getString("floorLevel"), resultSet.getString("floorPlanFilePath"), Integer.parseInt(resultSet.getString("floorBuildingId")), objects);

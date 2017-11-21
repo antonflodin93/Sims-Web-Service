@@ -25,7 +25,7 @@ public class MessageResource {
 	private MessageService messageService = new MessageService();
 	private List<Message> messages = null;
 
-	// Return regular messages
+	// Return regular broadcast messages
 	@GET
 	@Path("/regular")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -57,7 +57,7 @@ public class MessageResource {
 		}).build();
 	}
 
-	// Insert broadcast message
+	// Insert broadcast regular message
 	@POST
 	@Path("/regular")
 	@Consumes(MediaType.APPLICATION_JSON)

@@ -47,14 +47,15 @@ public class BuildingService {
 					ArrayList<FactoryObject> objects = new ArrayList<FactoryObject>();
 					
 					Connection innerInnerConnection = DBConnection.setDBConnection();
-					String sqlObjects = "SELECT * from objects where objectFloorId = ?";
+					String sqlObjects = "SELECT * from factoryobjects where objectFloorId = ?";
 					PreparedStatement pstObjects = connection.prepareStatement(sqlObjects);
 					pstObjects.setLong(1, floorId);
 					ResultSet resultSetObjects = pstObjects.executeQuery();
 					
 					// Create floorObjects
 					while (resultSetObjects.next()) {
-						FactoryObject object = new FactoryObject(Integer.parseInt(resultSetObjects.getString("objectId")), resultSetObjects.getString("objectName"), Integer.parseInt(resultSetObjects.getString("objectFloorId")));
+						FactoryObject object = new FactoryObject(Integer.parseInt(resultSetObjects.getString("objectId")), resultSetObjects.getString("objectName"), Integer.parseInt(resultSetObjects.getString("objectFloorId")),
+								Integer.parseInt(resultSetObjects.getString("areaXStart")), Integer.parseInt(resultSetObjects.getString("areaXEnd")), Integer.parseInt(resultSetObjects.getString("areaYStart")), Integer.parseInt(resultSetObjects.getString("areaYEnd")));
 						objects.add(object);
 				
 					
