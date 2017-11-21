@@ -132,4 +132,39 @@ public class MessageService {
 
 		return messages;
 	}
+	
+	// Add message for a given object
+	public void addFactoryObjectMessage(Message message, int factoryobjectId) throws ClassNotFoundException, SQLException {
+		int messageId = addMessage(message);
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO messagefactoryobject (messageId, objectId) values(?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, messageId);
+		pst.setLong(2, factoryobjectId);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+	}
+	
+	
+	public List<Message> getFactoryObjectMessage(int factoryobjectId) throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM messages INNER JOIN messagefactoryobject ON messages.messageId = messagefactoryobject.messageId AND messagefactoryobject.objectId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, factoryobjectId);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
+					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
+					resultSet.getString("messageType"));
+
+			messages.add(m);
+		}
+		pst.close();
+		connection.close();
+
+		return messages;
+	}
 }
