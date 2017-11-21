@@ -11,16 +11,16 @@ public class FactoryObject {
 		
 	}
 	
-	public FactoryObject(int objectId, String objectName, int objectFloorId, int xStart, int xEnd, int yStart,
-			int yEnd) {
+	public FactoryObject(int objectId, String objectName, int objectFloorId, int areaXStart, int areaXEnd, int areaYStart,
+			int areaYEnd) {
 		super();
 		this.objectId = objectId;
 		this.objectName = objectName;
 		this.objectFloorId = objectFloorId;
-		this.areaXStart = xStart;
-		this.areaXEnd = xEnd;
-		this.areaYStart = yStart;
-		this.areaYEnd = yEnd;
+		this.areaXStart = areaXStart;
+		this.areaXEnd = areaXEnd;
+		this.areaYStart = areaYStart;
+		this.areaYEnd = areaYEnd;
 	}
 
 	public int getObjectId() {
@@ -47,37 +47,40 @@ public class FactoryObject {
 		this.objectFloorId = objectFloorId;
 	}
 
-	public int getXstart() {
+	public int getAreaXStart() {
 		return areaXStart;
 	}
 
-	public void setXstart(int xstart) {
-		this.areaXStart = xstart;
+	public void setAreaXStart(int areaXStart) {
+		this.areaXStart = areaXStart;
 	}
 
-	public int getXend() {
+	public int getAreaXEnd() {
 		return areaXEnd;
 	}
 
-	public void setXend(int xend) {
-		this.areaXEnd = xend;
+	public void setAreaXEnd(int areaXEnd) {
+		this.areaXEnd = areaXEnd;
 	}
 
-	public int getYstart() {
+	public int getAreaYStart() {
 		return areaYStart;
 	}
 
-	public void setYstart(int ystart) {
-		this.areaYStart = ystart;
+	public void setAreaYStart(int areaYStart) {
+		this.areaYStart = areaYStart;
 	}
 
-	public int getYend() {
+	public int getAreaYEnd() {
 		return areaYEnd;
 	}
 
-	public void setYend(int yend) {
-		this.areaYEnd = yend;
+	public void setAreaYEnd(int areaYEnd) {
+		this.areaYEnd = areaYEnd;
 	}
+
+	
+	
 	
 	
 	
