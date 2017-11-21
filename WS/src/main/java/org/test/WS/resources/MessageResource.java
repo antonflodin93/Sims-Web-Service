@@ -24,6 +24,12 @@ public class MessageResource {
 	private MessageType messageType;
 	private MessageService messageService = new MessageService();
 	private List<Message> messages = null;
+	
+	/*
+	 * 
+	 * 	BROADCAST MESSAGES
+	 * 
+	 */
 
 	// Return regular broadcast messages
 	@GET
@@ -71,6 +77,13 @@ public class MessageResource {
 		}
 		return Response.ok().build();
 	}
+	
+	
+	/*
+	 * 
+	 * 	EMPLOYEE MESSAGES
+	 * 
+	 */
 
 	// Insert messages for employee
 	@POST
@@ -104,6 +117,14 @@ public class MessageResource {
 		}).build();
 	}
 
+	
+	/*
+	 * 
+	 * 	COMPANY MESSAGES
+	 * 
+	 */
+	
+	
 	// Insert message for a company
 	@POST
 	@Path("/regular/company/{companyName}")
@@ -136,6 +157,13 @@ public class MessageResource {
 		}).build();
 	}
 	
+	
+	/*
+	 * 
+	 * 	FACTORY OBJECT MESSAGES
+	 * 
+	 */
+	
 	// Insert regular message for a factoryobject
 	@POST
 	@Path("/regular/factoryobject/{factoryobjectId}")
@@ -152,7 +180,7 @@ public class MessageResource {
 		return Response.ok().build();
 	}
 	
-	// Get message for a given object
+	// Get regular message for a given object
 	@GET
 	@Path("/regular/factoryobject/{factoryobjectId}")
 	@Produces(MediaType.APPLICATION_JSON)
