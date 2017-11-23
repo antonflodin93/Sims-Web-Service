@@ -20,10 +20,10 @@ public class MessageResource {
 
 	private MessageService messageService = new MessageService();
 	private List<Message> messages = null;
-	
+
 	/*
 	 * 
-	 * 	BROADCAST MESSAGES
+	 * BROADCAST MESSAGES
 	 * 
 	 */
 
@@ -71,11 +71,10 @@ public class MessageResource {
 		}
 		return Response.ok().build();
 	}
-	
-	
+
 	/*
 	 * 
-	 * 	EMPLOYEE MESSAGES
+	 * EMPLOYEE MESSAGES
 	 * 
 	 */
 
@@ -111,14 +110,12 @@ public class MessageResource {
 		}).build();
 	}
 
-	
 	/*
 	 * 
-	 * 	COMPANY MESSAGES
+	 * COMPANY MESSAGES
 	 * 
 	 */
-	
-	
+
 	// Insert message for a company
 	@POST
 	@Path("/regular/company/{companyName}")
@@ -150,38 +147,37 @@ public class MessageResource {
 		return Response.ok(new GenericEntity<List<Message>>(messages) {
 		}).build();
 	}
-	
-	
+
 	/*
 	 * 
-	 * 	FACTORY OBJECT MESSAGES
+	 * FACTORY OBJECT MESSAGES
 	 * 
 	 */
-	
+
 	// Insert regular message for a factoryobject
 	@POST
 	@Path("/regular/factoryobject/{factoryobjectId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addObjectMessage(@PathParam("factoryobjectId") int factoryobjectId, Message message)
+	public Response addObjectRegularMessage(@PathParam("factoryobjectId") int factoryobjectId, Message message)
 			throws ClassNotFoundException, SQLException {
 		try {
-			messageService.addFactoryObjectMessage(message, factoryobjectId);
+			messageService.addFactoryObjectRegularMessage(message, factoryobjectId);
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 		return Response.ok().build();
 	}
-	
+
 	// Get regular message for a given object
 	@GET
 	@Path("/regular/factoryobject/{factoryobjectId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFactoryObjectMessage(@PathParam("factoryobjectId") int factoryobjectId)
+	public Response getFactoryObjectRegularMessage(@PathParam("factoryobjectId") int factoryobjectId)
 			throws ClassNotFoundException, SQLException {
 		try {
-			messages = messageService.getFactoryObjectMessage(factoryobjectId);
+			messages = messageService.getFactoryObjectRegularMessage(factoryobjectId);
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -189,4 +185,37 @@ public class MessageResource {
 		return Response.ok(new GenericEntity<List<Message>>(messages) {
 		}).build();
 	}
+
+	// Insert warning message for a factoryobject
+	@POST
+	@Path("/warning/factoryobject/{factoryobjectId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addObjectWarningMessage(@PathParam("factoryobjectId") int factoryobjectId, Message message)
+			throws ClassNotFoundException, SQLException {
+		try {
+			messageService.addFactoryObjectWarningMessage(message, factoryobjectId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok().build();
+	}
+
+	// Get warning message for a given object
+	@GET
+	@Path("/warning/factoryobject/{factoryobjectId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFactoryObjectWarningMessage(@PathParam("factoryobjectId") int factoryobjectId)
+			throws ClassNotFoundException, SQLException {
+		try {
+			messages = messageService.getFactoryObjectWarningMessage(factoryobjectId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok(new GenericEntity<List<Message>>(messages) {
+		}).build();
+	}
+
 }

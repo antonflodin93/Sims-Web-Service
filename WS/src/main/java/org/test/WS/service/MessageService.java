@@ -24,8 +24,7 @@ public class MessageService {
 
 	// Add the message to the message table, return the id
 	public int addMessage(Message message, int broadcast) throws ClassNotFoundException, SQLException {
-		
-		
+
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO messages (messageId, messageLabel, messageText, messageType, messageBroadCast) values(?, ?, ?, ?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -34,7 +33,7 @@ public class MessageService {
 		pst.setString(3, message.getMessageText());
 		pst.setString(4, message.getMessageType());
 		pst.setLong(5, broadcast);
-		//pst.setTimestamp(6,getCurrentTimeStamp());
+		// pst.setTimestamp(6,getCurrentTimeStamp());
 
 		pst.executeUpdate();
 
@@ -50,8 +49,7 @@ public class MessageService {
 	}
 
 	// Get all warning broadcast messages
-	public List<Message> getBroadCastMessages(String messageType)
-			throws SQLException, ClassNotFoundException {
+	public List<Message> getBroadCastMessages(String messageType) throws SQLException, ClassNotFoundException {
 
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
@@ -144,8 +142,8 @@ public class MessageService {
 		return messages;
 	}
 
-	// Add message for a given object
-	public void addFactoryObjectMessage(Message message, int factoryobjectId)
+	// Add regular message for a given object
+	public void addFactoryObjectRegularMessage(Message message, int factoryobjectId)
 			throws ClassNotFoundException, SQLException {
 		int messageId = addMessage(message, 0);
 		connection = DBConnection.setDBConnection();
@@ -158,10 +156,12 @@ public class MessageService {
 		connection.close();
 	}
 
-	public List<Message> getFactoryObjectMessage(int factoryobjectId) throws ClassNotFoundException, SQLException {
+	// Get regular message for a given object
+	public List<Message> getFactoryObjectRegularMessage(int factoryobjectId)
+			throws ClassNotFoundException, SQLException {
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
-		String sql = "SELECT * FROM messages INNER JOIN messagefactoryobject ON messages.messageId = messagefactoryobject.messageId AND messagefactoryobject.objectId = ?";
+		String sql = "SELECT * FROM messages INNER JOIN messagefactoryobject ON messages.messageId = messagefactoryobject.messageId AND messages.messageType = 'REGULAR' AND messagefactoryobject.objectId = ?";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, factoryobjectId);
 		resultSet = pst.executeQuery();
@@ -178,8 +178,44 @@ public class MessageService {
 
 		return messages;
 	}
-	
-	
+
+	// Add warning message for a given object
+	public void addFactoryObjectWarningMessage(Message message, int factoryobjectId)
+			throws ClassNotFoundException, SQLException {
+		int messageId = addMessage(message, 0);
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO messagefactoryobject (messageId, objectId) values(?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, messageId);
+		pst.setLong(2, factoryobjectId);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+	}
+
+	// Get warning message for a given object
+	public List<Message> getFactoryObjectWarningMessage(int factoryobjectId)
+			throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM messages INNER JOIN messagefactoryobject ON messages.messageId = messagefactoryobject.messageId AND messages.messageType = 'WARNING' AND messagefactoryobject.objectId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, factoryobjectId);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
+					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
+					resultSet.getString("messageType"));
+
+			messages.add(m);
+		}
+		pst.close();
+		connection.close();
+
+		return messages;
+	}
+
 	private static java.sql.Timestamp getCurrentTimeStamp() {
 		java.util.Date today = new java.util.Date();
 		return new java.sql.Timestamp(today.getTime());
