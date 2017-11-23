@@ -5,11 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
+
 import org.test.WS.database.DBConnection;
 import org.test.WS.model.Message;
-import org.test.WS.resources.MessageResource.MessageType;
 
 public class MessageService {
 	DBConnection dBconnection;
@@ -17,11 +22,40 @@ public class MessageService {
 	ResultSet resultSet;
 	List<Message> messages;
 
-	public List<Message> getMessages(MessageType messageType) throws SQLException, ClassNotFoundException {
+	// Add the message to the message table, return the id
+	public int addMessage(Message message, int broadcast) throws ClassNotFoundException, SQLException {
+		
+		
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO messages (messageId, messageLabel, messageText, messageType, messageBroadCast) values(?, ?, ?, ?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		pst.setLong(1, message.getMessageId());
+		pst.setString(2, message.getMessageLabel());
+		pst.setString(3, message.getMessageText());
+		pst.setString(4, message.getMessageType());
+		pst.setLong(5, broadcast);
+		//pst.setTimestamp(6,getCurrentTimeStamp());
+
+		pst.executeUpdate();
+
+		// Get the message id
+		int messageId = 0;
+		ResultSet rs = pst.getGeneratedKeys();
+		if (rs.next()) {
+			messageId = rs.getInt(1);
+		}
+		pst.close();
+		connection.close();
+		return messageId;
+	}
+
+	// Get all warning broadcast messages
+	public List<Message> getBroadCastMessages(String messageType)
+			throws SQLException, ClassNotFoundException {
 
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
-		String sql = "SELECT * from messages WHERE messageType = '" + messageType.name() + "'";
+		String sql = "SELECT * from messages WHERE messageBroadCast = 1 AND messageType = '" + messageType + "'";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		resultSet = pst.executeQuery();
 
@@ -39,36 +73,13 @@ public class MessageService {
 		return messages;
 	}
 
-	// Add the message to the message table
-	public int addMessage(Message message) throws ClassNotFoundException, SQLException {
-		connection = DBConnection.setDBConnection();
-		String sql = "INSERT INTO messages (messageId, messageLabel, messageText, messageType) values(?, ?, ?, ?)";
-		PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-		pst.setLong(1, message.getMessageId());
-		pst.setString(2, message.getMessageLabel());
-		pst.setString(3, message.getMessageText());
-		pst.setString(4, message.getMessageType());
-
-		pst.executeUpdate();
-
-		// Get the message id
-		int messageId = 0;
-		ResultSet rs = pst.getGeneratedKeys();
-		if (rs.next()) {
-			messageId = rs.getInt(1);
-		}
-		pst.close();
-		connection.close();
-		return messageId;
-	}
-
-	public void addBroadcastMessage(Message message) throws ClassNotFoundException, SQLException {
+	public void addBroadcastRegularMessage(Message message) throws ClassNotFoundException, SQLException {
 		// Add the message in the message table, get id of message
-		addMessage(message);
+		addMessage(message, 1);
 	}
 
 	public void addEmployeeMessage(Message message, int employeeId) throws ClassNotFoundException, SQLException {
-		int messageId = addMessage(message);
+		int messageId = addMessage(message, 0);
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO messageemployee (messageId, employeeId) values(?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
@@ -101,7 +112,7 @@ public class MessageService {
 	}
 
 	public void addCompanyMessage(Message message, String companyName) throws ClassNotFoundException, SQLException {
-		int messageId = addMessage(message);
+		int messageId = addMessage(message, 0);
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO messagecompany (messageId, companyName) values(?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
@@ -132,10 +143,11 @@ public class MessageService {
 
 		return messages;
 	}
-	
+
 	// Add message for a given object
-	public void addFactoryObjectMessage(Message message, int factoryobjectId) throws ClassNotFoundException, SQLException {
-		int messageId = addMessage(message);
+	public void addFactoryObjectMessage(Message message, int factoryobjectId)
+			throws ClassNotFoundException, SQLException {
+		int messageId = addMessage(message, 0);
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO messagefactoryobject (messageId, objectId) values(?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
@@ -145,8 +157,7 @@ public class MessageService {
 		pst.close();
 		connection.close();
 	}
-	
-	
+
 	public List<Message> getFactoryObjectMessage(int factoryobjectId) throws ClassNotFoundException, SQLException {
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
@@ -166,5 +177,12 @@ public class MessageService {
 		connection.close();
 
 		return messages;
+	}
+	
+	
+	private static java.sql.Timestamp getCurrentTimeStamp() {
+		java.util.Date today = new java.util.Date();
+		return new java.sql.Timestamp(today.getTime());
+
 	}
 }

@@ -17,11 +17,7 @@ import org.test.WS.service.MessageService;
 
 @Path("messages")
 public class MessageResource {
-	public enum MessageType {
-		REGULAR, WARNING;
-	}
 
-	private MessageType messageType;
 	private MessageService messageService = new MessageService();
 	private List<Message> messages = null;
 	
@@ -35,10 +31,9 @@ public class MessageResource {
 	@GET
 	@Path("/regular")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getRegularMessages() throws ClassNotFoundException, SQLException {
+	public Response getRegularBroadCastMessages() throws ClassNotFoundException, SQLException {
 		try {
-			messageType = MessageType.REGULAR;
-			messages = messageService.getMessages(messageType);
+			messages = messageService.getBroadCastMessages("regular");
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -47,14 +42,13 @@ public class MessageResource {
 		}).build();
 	}
 
-	// Return warning messages
+	// Return warning broadcast messages
 	@GET
 	@Path("/warning")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getWarningMessages() throws ClassNotFoundException, SQLException {
+	public Response getWarningBroadCastMessages() throws ClassNotFoundException, SQLException {
 		try {
-			messageType = MessageType.WARNING;
-			messages = messageService.getMessages(messageType);
+			messages = messageService.getBroadCastMessages("warning");
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -68,9 +62,9 @@ public class MessageResource {
 	@Path("/regular")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addBroadcastMessage(Message message) throws ClassNotFoundException, SQLException {
+	public Response addBroadcastRegularMessage(Message message) throws ClassNotFoundException, SQLException {
 		try {
-			messageService.addBroadcastMessage(message);
+			messageService.addBroadcastRegularMessage(message);
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
