@@ -65,7 +65,8 @@ public class BuildingService {
 					
 									
 					Floor floor = new Floor(Integer.parseInt(resultSetFloors.getString("floorId")), 
-							resultSetFloors.getString("floorLevel"), resultSetFloors.getString("floorPlanFilePath"), Integer.parseInt(resultSetFloors.getString("floorBuildingId")), objects);
+							resultSetFloors.getString("floorLevel"), resultSetFloors.getString("floorPlanFilePath"), Integer.parseInt(resultSetFloors.getString("floorBuildingId")), objects,
+							Integer.parseInt(resultSetFloors.getString("floorAreaColumns")), Integer.parseInt(resultSetFloors.getString("floorAreaRows")));
 					floors.add(floor);
 				}
 				pstFloors.close();

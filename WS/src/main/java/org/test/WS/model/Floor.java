@@ -8,6 +8,7 @@ public class Floor {
     private String floorPlanFilePath;
     private int floorBuildingId;
     private ArrayList<FactoryObject> objects;
+    private int floorAreaRows, floorAreaColumns;
 
     Floor() {
     	
@@ -32,8 +33,25 @@ public class Floor {
 		this.objects = objects;
 	}
 
+	
+	
 
 
+
+
+	public Floor(int floorId, String floorLevel, String floorPlanFilePath, int floorBuildingId,
+			ArrayList<FactoryObject> objects, int floorAreaRows, int floorAreaColumns) {
+		super();
+		this.floorId = floorId;
+		this.floorLevel = floorLevel;
+		this.floorPlanFilePath = floorPlanFilePath;
+		this.floorBuildingId = floorBuildingId;
+		this.objects = objects;
+		this.floorAreaRows = floorAreaRows;
+		this.floorAreaColumns = floorAreaColumns;
+	}
+
+	
 
 
 	public int getFloorId() {
@@ -85,13 +103,34 @@ public class Floor {
 	public void setObjects(ArrayList<FactoryObject> objects) {
 		this.objects = objects;
 	}
+
+
+
+
+	public int getFloorAreaRows() {
+		return floorAreaRows;
+	}
+
+
+
+
+	public void setFloorAreaRows(int floorAreaRows) {
+		this.floorAreaRows = floorAreaRows;
+	}
+
+
+
+
+	public int getFloorAreaColumns() {
+		return floorAreaColumns;
+	}
+
+
+
+
+	public void setFloorAreaColumns(int floorAreaColumns) {
+		this.floorAreaColumns = floorAreaColumns;
+	}
 	
-	
-
-
-
-    
-    
-    
     
 }
