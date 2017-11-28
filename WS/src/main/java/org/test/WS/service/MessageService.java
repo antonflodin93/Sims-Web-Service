@@ -65,6 +65,7 @@ public class MessageService {
 			messages.add(m);
 		}
 
+		resultSet.close();
 		pst.close();
 		connection.close();
 
@@ -103,6 +104,7 @@ public class MessageService {
 
 			messages.add(m);
 		}
+		resultSet.close();
 		pst.close();
 		connection.close();
 
@@ -136,6 +138,7 @@ public class MessageService {
 
 			messages.add(m);
 		}
+		resultSet.close();
 		pst.close();
 		connection.close();
 
@@ -173,6 +176,7 @@ public class MessageService {
 
 			messages.add(m);
 		}
+		resultSet.close();
 		pst.close();
 		connection.close();
 
@@ -210,6 +214,59 @@ public class MessageService {
 
 			messages.add(m);
 		}
+		resultSet.close();
+		pst.close();
+		connection.close();
+
+		return messages;
+	}
+
+	// Get warning message for all objects in a floor
+	public List<Message> getFactoryObjectFloorWarningMessages(int floorId) throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		// messages.add(new Message(1, "Num: ", "Label", "WARNING" ));
+
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT objectId FROM factoryobjects WHERE objectFloorId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, floorId);
+		ResultSet resultSetMessages = pst.executeQuery();
+
+		while (resultSetMessages.next()) {
+			
+			//List<Message> objectmessages = getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId")));
+			int objectId = Integer.parseInt(resultSet.getString("objectId")); // NULL POINTER
+			
+			if (getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId"))) != null) {
+				messages.addAll(getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId"))));
+			}
+
+			// messages.add(new Message(1, "Num: " + resultSet.getString("objectId"),
+			// "Label", "WARNING" ));
+		}
+		resultSetMessages.close();
+		pst.close();
+		connection.close();
+		return messages;
+	}
+
+	// Get warning message for all objects in a floor
+	public List<Message> getFactoryObjectFloorRegularMessages(int floorId) throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+
+		// Get all the objects in the given floor
+		String sql = "SELECT objectId FROM factoryobjects WHERE objectFloorId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, floorId);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+			int objectId = Integer.parseInt(resultSet.getString("objectId"));
+			// Get all the warning messages for the object
+			messages.addAll(getFactoryObjectRegularMessage(objectId));
+		}
+
 		pst.close();
 		connection.close();
 

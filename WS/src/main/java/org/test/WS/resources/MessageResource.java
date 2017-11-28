@@ -218,4 +218,36 @@ public class MessageResource {
 		}).build();
 	}
 
+	// Get warning messages for all object in a given floor
+	@GET
+	@Path("/warning/floor/{floorId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFloorWarningMessage(@PathParam("floorId") int floorId)
+			throws ClassNotFoundException, SQLException {
+		try {
+			messages = messageService.getFactoryObjectFloorWarningMessages(floorId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok(new GenericEntity<List<Message>>(messages) {
+		}).build();
+	}
+
+	// Get regular messages for all object in a given floor
+	@GET
+	@Path("/regular/floor/{floorId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFloorRegularMessage(@PathParam("floorId") int floorId)
+			throws ClassNotFoundException, SQLException {
+		try {
+			messages = messageService.getFactoryObjectFloorRegularMessages(floorId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok(new GenericEntity<List<Message>>(messages) {
+		}).build();
+	}
+
 }
