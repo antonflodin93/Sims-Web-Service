@@ -174,7 +174,7 @@ public class EmployeeResource {
 		return Response.ok().build();
 	}
 
-	// Delete an employee in a building
+	// Update employees location when switching floor
 	@PUT
 	@Path("floor/{floorId}/employee/{employeeID}")
 	public Response updateEmployeeFloor(@PathParam("floorId") int floorId, @PathParam("employeeID") int employeeID)
@@ -186,6 +186,36 @@ public class EmployeeResource {
 		}
 
 		return Response.ok().build();
+	}
+
+	// Employee enters a building
+	@POST
+	@Path("building/{buildingId}/employee/{employeeID}")
+	public Response enterBuildingEmployee(@PathParam("buildingId") int buildingId,
+			@PathParam("employeeID") int employeeID) throws ClassNotFoundException, SQLException {
+		try {
+			employeeService.enterBuildingEmployee(buildingId, employeeID);
+		} catch (ClassNotFoundException | SQLException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+
+		return Response.ok().build();
+
+	}
+
+	// Employee enters a floor first time
+	@POST
+	@Path("floor/{floorId}/employee/{employeeID}")
+	public Response enterFloorEmployee(@PathParam("floorId") int floorId,
+			@PathParam("employeeID") int employeeID) throws ClassNotFoundException, SQLException {
+		try {
+			employeeService.enterFloorEmployee(floorId, employeeID);
+		} catch (ClassNotFoundException | SQLException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+
+		return Response.ok().build();
+
 	}
 
 }

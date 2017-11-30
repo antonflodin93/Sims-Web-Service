@@ -90,7 +90,8 @@ public class EmployeeService {
 	}
 
 	// Inserts employee into db
-	public boolean addEmployee(Employee employee) throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
+	public boolean addEmployee(Employee employee)
+			throws ClassNotFoundException, SQLException, NoSuchAlgorithmException {
 		// Check if the company of the employee exists
 		String company = employee.getEmployeeCompany();
 		connection = DBConnection.setDBConnection();
@@ -143,40 +144,39 @@ public class EmployeeService {
 
 		String hash = sb.toString();
 
-	
-			connection = DBConnection.setDBConnection();
-			// Check if user exists
-			String checkIfExistsSql = "Select * from employees where employeeUsername = ? || employeeEmail = ?";
-			PreparedStatement ps = connection.prepareStatement(checkIfExistsSql);
-			ps.setString(1, employee.getEmployeeUsername());
-			ps.setString(2, employee.getEmployeeEmail());
-			resultSet = ps.executeQuery();
+		connection = DBConnection.setDBConnection();
+		// Check if user exists
+		String checkIfExistsSql = "Select * from employees where employeeUsername = ? || employeeEmail = ?";
+		PreparedStatement ps = connection.prepareStatement(checkIfExistsSql);
+		ps.setString(1, employee.getEmployeeUsername());
+		ps.setString(2, employee.getEmployeeEmail());
+		resultSet = ps.executeQuery();
 
-			// If user do not exists
-			if (resultSet.next() == false) {
-				// Insert into db
-				sql = "INSERT INTO employees (employeeId, employeeFirstName, employeeLastName, employeeUsername, "
-						+ "employeeEmail, employeePassword, employeePhonenumber, employeeCompany, employeeSalt) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-				pst = connection.prepareStatement(sql);
-				pst.setLong(1, employee.getEmployeeId());
-				pst.setString(2, employee.getEmployeeFirstName());
-				pst.setString(3, employee.getEmployeeLastName());
-				pst.setString(4, employee.getEmployeeUsername());
-				pst.setString(5, employee.getEmployeeEmail());
-				pst.setString(6, hash);
-				pst.setString(7, employee.getEmployeePhonenumber());
-				pst.setString(8, employee.getEmployeeCompany());
-				pst.setString(9, saltString);
-				pst.executeUpdate();
-				pst.close();
-				connection.close();
-			} else {
-				connection.close();
-				// User already exists, return false
-				return false;
-			}
-			
-			return true;
+		// If user do not exists
+		if (resultSet.next() == false) {
+			// Insert into db
+			sql = "INSERT INTO employees (employeeId, employeeFirstName, employeeLastName, employeeUsername, "
+					+ "employeeEmail, employeePassword, employeePhonenumber, employeeCompany, employeeSalt) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			pst = connection.prepareStatement(sql);
+			pst.setLong(1, employee.getEmployeeId());
+			pst.setString(2, employee.getEmployeeFirstName());
+			pst.setString(3, employee.getEmployeeLastName());
+			pst.setString(4, employee.getEmployeeUsername());
+			pst.setString(5, employee.getEmployeeEmail());
+			pst.setString(6, hash);
+			pst.setString(7, employee.getEmployeePhonenumber());
+			pst.setString(8, employee.getEmployeeCompany());
+			pst.setString(9, saltString);
+			pst.executeUpdate();
+			pst.close();
+			connection.close();
+		} else {
+			connection.close();
+			// User already exists, return false
+			return false;
+		}
+
+		return true;
 	}
 
 	public void deleteEmployeeById(int id) throws SQLException, ClassNotFoundException {
@@ -187,7 +187,7 @@ public class EmployeeService {
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
-		
+
 	}
 
 	public List<Employee> getEmployeesInCompany(String company) throws ClassNotFoundException, SQLException {
@@ -210,7 +210,7 @@ public class EmployeeService {
 
 		return employees;
 	}
-	
+
 	public List<Employee> getEmployeesInBuilding(int buildingId) throws ClassNotFoundException, SQLException {
 		employees = new ArrayList<Employee>();
 		connection = DBConnection.setDBConnection();
@@ -232,7 +232,7 @@ public class EmployeeService {
 
 		return employees;
 	}
-	
+
 	public List<Employee> getEmployeesInFloor(int floorId) throws ClassNotFoundException, SQLException {
 		employees = new ArrayList<Employee>();
 		connection = DBConnection.setDBConnection();
@@ -263,7 +263,7 @@ public class EmployeeService {
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
-		
+
 	}
 
 	public void updateEmployeeFloor(int floorId, int employeeID) throws SQLException, ClassNotFoundException {
@@ -275,10 +275,31 @@ public class EmployeeService {
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
+
+	}
+
+	// Employee enters a building
+	public void enterBuildingEmployee(int buildingId, int employeeID) throws ClassNotFoundException, SQLException {
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO employeebuilding (buildingId, employeeID) values(?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, buildingId);
+		pst.setLong(2, employeeID);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+	}
+
+	public void enterFloorEmployee(int floorId, int employeeID) throws ClassNotFoundException, SQLException {
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO employeefloor (floorId, employeeID) values(?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, floorId);
+		pst.setLong(2, employeeID);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
 		
 	}
-	
-	
-	
 
 }
