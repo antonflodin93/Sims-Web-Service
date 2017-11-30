@@ -254,6 +254,17 @@ public class EmployeeService {
 
 		return employees;
 	}
+
+	public void deleteEmployeeInBuilding(int employeeId) throws ClassNotFoundException, SQLException {
+		connection = DBConnection.setDBConnection();
+		String sql = "DELETE FROM employeebuilding WHERE employeeId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, employeeId);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+		
+	}
 	
 	
 	

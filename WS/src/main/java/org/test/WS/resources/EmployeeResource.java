@@ -146,8 +146,7 @@ public class EmployeeResource {
 	@GET
 	@Path("floor/{floorId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getEmployeesInFloor(@PathParam("floorId") int floorId)
-			throws ClassNotFoundException, SQLException {
+	public Response getEmployeesInFloor(@PathParam("floorId") int floorId) throws ClassNotFoundException, SQLException {
 
 		try {
 			employees = employeeService.getEmployeesInFloor(floorId);
@@ -158,6 +157,19 @@ public class EmployeeResource {
 		return Response.ok(new GenericEntity<List<Employee>>(employees) {
 		}).build();
 
+	}
+
+	// Delete an employee in a building
+	@DELETE
+	@Path("building/{employeeId}")
+	public Response deleteEmployeeInBuilding(@PathParam("employeeId") int employeeId) throws ClassNotFoundException, SQLException {
+		try {
+			employeeService.deleteEmployeeInBuilding(employeeId);
+		} catch (ClassNotFoundException | SQLException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+
+		return Response.ok().build();
 	}
 
 }
