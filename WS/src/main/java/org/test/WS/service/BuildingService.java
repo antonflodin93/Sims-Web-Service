@@ -63,17 +63,26 @@ public class BuildingService {
 					pstObjects.close();
 					innerInnerConnection.close();
 					
-									
+					// Get number of Employees in building
+					EmployeeService empservice = new EmployeeService();
+					int numOfEmployees = empservice.getEmployeesInFloor(Integer.parseInt(resultSetFloors.getString("floorId"))).size();
+					
+					
 					Floor floor = new Floor(Integer.parseInt(resultSetFloors.getString("floorId")), 
 							resultSetFloors.getString("floorLevel"), resultSetFloors.getString("floorPlanFilePath"), Integer.parseInt(resultSetFloors.getString("floorBuildingId")), objects,
-							Integer.parseInt(resultSetFloors.getString("floorAreaColumns")), Integer.parseInt(resultSetFloors.getString("floorAreaRows")));
+							Integer.parseInt(resultSetFloors.getString("floorAreaColumns")), Integer.parseInt(resultSetFloors.getString("floorAreaRows")), numOfEmployees);
 					floors.add(floor);
 				}
 				pstFloors.close();
 				innerConnection.close();
 				
+				// Get number of Employees in building
+				EmployeeService empservice = new EmployeeService();
+				int numOfEmployees = empservice.getEmployeesInBuilding(Integer.parseInt(resultSet.getString("buildingId"))).size();
+				
+				
 				// Create building object with the floors
-				Building building = new Building(Integer.parseInt(resultSet.getString("buildingId")), resultSet.getString("buildingName"), floors);
+				Building building = new Building(Integer.parseInt(resultSet.getString("buildingId")), resultSet.getString("buildingName"), floors, numOfEmployees);
 				buildings.add(building);
 			}
 

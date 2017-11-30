@@ -9,6 +9,7 @@ public class Floor {
     private int floorBuildingId;
     private ArrayList<FactoryObject> objects;
     private int floorAreaRows, floorAreaColumns;
+    private int numOfEmployees;
 
     Floor() {
     	
@@ -33,14 +34,10 @@ public class Floor {
 		this.objects = objects;
 	}
 
-	
-	
-
-
 
 
 	public Floor(int floorId, String floorLevel, String floorPlanFilePath, int floorBuildingId,
-			ArrayList<FactoryObject> objects, int floorAreaRows, int floorAreaColumns) {
+			ArrayList<FactoryObject> objects, int floorAreaRows, int floorAreaColumns, int numOfEmployees) {
 		super();
 		this.floorId = floorId;
 		this.floorLevel = floorLevel;
@@ -49,6 +46,7 @@ public class Floor {
 		this.objects = objects;
 		this.floorAreaRows = floorAreaRows;
 		this.floorAreaColumns = floorAreaColumns;
+		this.numOfEmployees = numOfEmployees;
 	}
 
 	
@@ -131,6 +129,21 @@ public class Floor {
 	public void setFloorAreaColumns(int floorAreaColumns) {
 		this.floorAreaColumns = floorAreaColumns;
 	}
+
+
+
+
+	public int getNumOfEmployees() {
+		return numOfEmployees;
+	}
+
+
+
+
+	public void setNumOfEmployees(int numOfEmployees) {
+		this.numOfEmployees = numOfEmployees;
+	}
+	
 	
     
 }
