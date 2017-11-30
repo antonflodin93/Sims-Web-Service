@@ -8,6 +8,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
@@ -162,9 +163,24 @@ public class EmployeeResource {
 	// Delete an employee in a building
 	@DELETE
 	@Path("building/{employeeId}")
-	public Response deleteEmployeeInBuilding(@PathParam("employeeId") int employeeId) throws ClassNotFoundException, SQLException {
+	public Response deleteEmployeeInBuilding(@PathParam("employeeId") int employeeId)
+			throws ClassNotFoundException, SQLException {
 		try {
 			employeeService.deleteEmployeeInBuilding(employeeId);
+		} catch (ClassNotFoundException | SQLException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+
+		return Response.ok().build();
+	}
+
+	// Delete an employee in a building
+	@PUT
+	@Path("floor/{floorId}/employee/{employeeID}")
+	public Response updateEmployeeFloor(@PathParam("floorId") int floorId, @PathParam("employeeID") int employeeID)
+			throws ClassNotFoundException, SQLException {
+		try {
+			employeeService.updateEmployeeFloor(floorId, employeeID);
 		} catch (ClassNotFoundException | SQLException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}

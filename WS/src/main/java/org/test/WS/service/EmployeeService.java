@@ -265,6 +265,18 @@ public class EmployeeService {
 		connection.close();
 		
 	}
+
+	public void updateEmployeeFloor(int floorId, int employeeID) throws SQLException, ClassNotFoundException {
+		connection = DBConnection.setDBConnection();
+		String sql = "UPDATE employeefloor SET floorId = ? WHERE employeeID = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, floorId);
+		pst.setLong(2, employeeID);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+		
+	}
 	
 	
 	
