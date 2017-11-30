@@ -32,12 +32,12 @@ public class EmployeeResource {
 	public Response getEmployees() throws ClassNotFoundException, SQLException {
 		try {
 			employees = employeeService.getEmployees();
-			
-		} catch(SQLException|ClassNotFoundException e){
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(e.getMessage()).build();
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
-		return Response.ok(new GenericEntity<List<Employee>>(employees) {}).build();
+		return Response.ok(new GenericEntity<List<Employee>>(employees) {
+		}).build();
 	}
 
 	// Returns employee with a certain ID
@@ -47,12 +47,11 @@ public class EmployeeResource {
 	public Response getEmployeeById(@PathParam("id") String id) throws ClassNotFoundException, SQLException {
 		int theid = Integer.parseInt(id);
 		try {
-			employee = employeeService.getEmployeeById(theid);			
-		} catch(ClassNotFoundException|SQLException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(e.getMessage()).build();			
+			employee = employeeService.getEmployeeById(theid);
+		} catch (ClassNotFoundException | SQLException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
-		
+
 		return Response.ok(employee).build();
 	}
 
@@ -64,12 +63,11 @@ public class EmployeeResource {
 			throws ClassNotFoundException, SQLException {
 		try {
 			employee = employeeService.getEmployeeByUsername(username);
-			
-		} catch(ClassNotFoundException|SQLException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(e.getMessage()).build();			
+
+		} catch (ClassNotFoundException | SQLException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
-		
+
 		return Response.ok(employee).build();
 	}
 
@@ -81,18 +79,16 @@ public class EmployeeResource {
 		Boolean success;
 		try {
 			success = employeeService.addEmployee(employee);
-			if(success) {
+			if (success) {
 				return Response.ok().build();
 			} else {
-				return Response.status(Response.Status.FORBIDDEN)
-						.entity("The user already exists.").build();	
+				return Response.status(Response.Status.FORBIDDEN).entity("The user already exists.").build();
 			}
-		} catch(NoSuchAlgorithmException e){
+		} catch (NoSuchAlgorithmException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
 					.entity("Could not successfully hash the password").build();
-		} catch(SQLException|ClassNotFoundException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(e.getMessage()).build();			
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 
 	}
@@ -102,12 +98,11 @@ public class EmployeeResource {
 	@Path("{id}")
 	public Response deleteEmployeeById(@PathParam("id") int id) throws ClassNotFoundException, SQLException {
 		try {
-			employeeService.deleteEmployeeById(id);			
-		} catch(ClassNotFoundException|SQLException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(e.getMessage()).build();			
+			employeeService.deleteEmployeeById(id);
+		} catch (ClassNotFoundException | SQLException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
-		
+
 		return Response.ok().build();
 	}
 
@@ -117,17 +112,52 @@ public class EmployeeResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getEmployeesInCompany(@PathParam("company") String company)
 			throws ClassNotFoundException, SQLException {
-			
+
 		try {
 			employees = employeeService.getEmployeesInCompany(company);
-			
-		} catch(SQLException|ClassNotFoundException e){
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-					.entity(e.getMessage()).build();
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
-		return Response.ok(new GenericEntity<List<Employee>>(employees) {}).build();
-		
-		
+		return Response.ok(new GenericEntity<List<Employee>>(employees) {
+		}).build();
+
+	}
+
+	// Returns all employees in a building
+	@GET
+	@Path("building/{buildingId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEmployeesInBuilding(@PathParam("buildingId") int buildingId)
+			throws ClassNotFoundException, SQLException {
+
+		try {
+			employees = employeeService.getEmployeesInBuilding(buildingId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok(new GenericEntity<List<Employee>>(employees) {
+		}).build();
+
+	}
+
+	// Returns all employees in a floor
+	@GET
+	@Path("floor/{floorId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEmployeesInFloor(@PathParam("floorId") int floorId)
+			throws ClassNotFoundException, SQLException {
+
+		try {
+			employees = employeeService.getEmployeesInFloor(floorId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok(new GenericEntity<List<Employee>>(employees) {
+		}).build();
+
 	}
 
 }

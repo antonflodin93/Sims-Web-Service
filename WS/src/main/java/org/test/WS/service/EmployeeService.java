@@ -210,5 +210,52 @@ public class EmployeeService {
 
 		return employees;
 	}
+	
+	public List<Employee> getEmployeesInBuilding(int buildingId) throws ClassNotFoundException, SQLException {
+		employees = new ArrayList<Employee>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM employees INNER JOIN employeebuilding ON employees.employeeID = employeebuilding.employeeID AND employeebuilding.buildingId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, buildingId);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")),
+					resultSet.getString("employeeFirstName"), resultSet.getString("employeeLastName"),
+					resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"),
+					resultSet.getString("employeePhonenumber"), resultSet.getString("employeeCompany"));
+
+			employees.add(m);
+		}
+		pst.close();
+		connection.close();
+
+		return employees;
+	}
+	
+	public List<Employee> getEmployeesInFloor(int floorId) throws ClassNotFoundException, SQLException {
+		employees = new ArrayList<Employee>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM employees INNER JOIN employeefloor ON employees.employeeID = employeefloor.employeeID AND employeefloor.floorId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, floorId);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")),
+					resultSet.getString("employeeFirstName"), resultSet.getString("employeeLastName"),
+					resultSet.getString("employeeUsername"), resultSet.getString("employeeEmail"),
+					resultSet.getString("employeePhonenumber"), resultSet.getString("employeeCompany"));
+
+			employees.add(m);
+		}
+		pst.close();
+		connection.close();
+
+		return employees;
+	}
+	
+	
+	
 
 }
