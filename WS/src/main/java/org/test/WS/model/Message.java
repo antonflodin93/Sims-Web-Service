@@ -10,21 +10,23 @@ public class Message {
 	private String messageText;
 	private String messageLabel;
 	private String messageType;
+	private String date;
+	private String time;
 
 	public Message() {
 		
 	}
 	
 	
-	public Message(int messageId, String messageText, String messageLabel, String messageType) {
+	public Message(int messageId, String messageText, String messageLabel, String messageType, String time, String date) {
 		super();
 		this.messageId = messageId;
 		this.messageText = messageText;
 		this.messageLabel = messageLabel;
 		this.messageType = messageType;
+		this.time = time;
+		this.date = date;
 	}
-
-
 
 
 
@@ -67,8 +69,24 @@ public class Message {
 	}
 
 
-	
+	public String getDate() {
+		return date;
+	}
 
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+
+	public String getTime() {
+		return time;
+	}
+
+
+	public void setTime(String time) {
+		this.time = time;
+	}
 	
 	
 	

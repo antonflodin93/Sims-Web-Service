@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.test.WS.database.DBConnection;
@@ -48,7 +49,7 @@ public class MessageService {
 		return messageId;
 	}
 
-	// Get all warning broadcast messages
+	// Get all broadcast messages
 	public List<Message> getBroadCastMessages(String messageType) throws SQLException, ClassNotFoundException {
 
 		messages = new ArrayList<Message>();
@@ -58,10 +59,15 @@ public class MessageService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
+			// Format timestamp
+			Timestamp timestamp = resultSet.getTimestamp("messageTimestamp");
+			java.util.Date unformatedtime = timestamp;
+			String date = new SimpleDateFormat("dd/MM").format(unformatedtime);
+			String time = new SimpleDateFormat("HH:mm").format(unformatedtime);
 
 			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
 					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
-					resultSet.getString("messageType"));
+					resultSet.getString("messageType"), time, date);
 			messages.add(m);
 		}
 
@@ -98,10 +104,15 @@ public class MessageService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
+			// Format timestamp
+			Timestamp timestamp = resultSet.getTimestamp("messageTimestamp");
+			java.util.Date unformatedtime = timestamp;
+			String date = new SimpleDateFormat("dd/MM").format(unformatedtime);
+			String time = new SimpleDateFormat("HH:mm").format(unformatedtime);
+
 			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
 					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
-					resultSet.getString("messageType"));
-
+					resultSet.getString("messageType"), time, date);
 			messages.add(m);
 		}
 		resultSet.close();
@@ -132,10 +143,15 @@ public class MessageService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
+			// Format timestamp
+			Timestamp timestamp = resultSet.getTimestamp("messageTimestamp");
+			java.util.Date unformatedtime = timestamp;
+			String date = new SimpleDateFormat("dd/MM").format(unformatedtime);
+			String time = new SimpleDateFormat("HH:mm").format(unformatedtime);
+
 			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
 					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
-					resultSet.getString("messageType"));
-
+					resultSet.getString("messageType"), time, date);
 			messages.add(m);
 		}
 		resultSet.close();
@@ -170,10 +186,15 @@ public class MessageService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
+			// Format timestamp
+			Timestamp timestamp = resultSet.getTimestamp("messageTimestamp");
+			java.util.Date unformatedtime = timestamp;
+			String date = new SimpleDateFormat("dd/MM").format(unformatedtime);
+			String time = new SimpleDateFormat("HH:mm").format(unformatedtime);
+
 			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
 					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
-					resultSet.getString("messageType"));
-
+					resultSet.getString("messageType"), time, date);
 			messages.add(m);
 		}
 		resultSet.close();
@@ -208,10 +229,15 @@ public class MessageService {
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
+			// Format timestamp
+			Timestamp timestamp = resultSet.getTimestamp("messageTimestamp");
+			java.util.Date unformatedtime = timestamp;
+			String date = new SimpleDateFormat("dd/MM").format(unformatedtime);
+			String time = new SimpleDateFormat("HH:mm").format(unformatedtime);
+
 			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
 					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
-					resultSet.getString("messageType"));
-
+					resultSet.getString("messageType"), time, date);
 			messages.add(m);
 		}
 		resultSet.close();
@@ -233,10 +259,11 @@ public class MessageService {
 		ResultSet resultSetMessages = pst.executeQuery();
 
 		while (resultSetMessages.next()) {
-			
-			//List<Message> objectmessages = getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId")));
+
+			// List<Message> objectmessages =
+			// getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId")));
 			int objectId = Integer.parseInt(resultSet.getString("objectId")); // NULL POINTER
-			
+
 			if (getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId"))) != null) {
 				messages.addAll(getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId"))));
 			}
