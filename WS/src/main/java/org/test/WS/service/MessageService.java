@@ -313,13 +313,16 @@ public class MessageService {
 		connection.close();
 	}
 
-	// Get warning messages for a floor
-	public List<Message> getFloorWarningMessage(int floorId) throws ClassNotFoundException, SQLException {
+	// Get warning messages for a floor that has not yet been acknowledged by
+	// employee
+	public List<Message> getFloorWarningMessage(int floorId, int employeeID)
+			throws ClassNotFoundException, SQLException {
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
-		String sql = "SELECT * FROM messages INNER JOIN messagefloor ON messages.messageId = messagefloor.messageId AND messages.messageType = 'WARNING' AND messagefloor.floorId = ?";
+		String sql = "SELECT messages.messageId, messages.messageText, messages.messageLabel, messages.messageType, messages.messageCurrentmillis FROM messages, messagefloor WHERE messages.messageId = messagefloor.messageId AND messages.messageType = 'WARNING' AND messagefloor.floorId = ? AND messages.messageId NOT IN (SELECT messageacknowledged.messageId FROM messageacknowledged WHERE messageacknowledged.employeeID = ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, floorId);
+		pst.setLong(2, employeeID);
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
@@ -336,8 +339,21 @@ public class MessageService {
 		return messages;
 	}
 
+	/*
+	 * 
+	 * 
+	 * SELECT messages.messageText FROM messages, messagefloor WHERE
+	 * messages.messageId = messagefloor.messageId AND messages.messageType =
+	 * 'WARNING' AND messagefloor.floorId = 1 AND messages.messageId NOT IN (SELECT
+	 * messageacknowledged.messageId FROM messageacknowledged WHERE
+	 * messageacknowledged.employeeID = 6)
+	 * 
+	 * 
+	 */
+
 	// Acknowledge warning message for a floor
-	public void acknowledgeFloorWarningMessage(int messageId, int employeeID) throws ClassNotFoundException, SQLException {
+	public void acknowledgeFloorWarningMessage(int messageId, int employeeID)
+			throws ClassNotFoundException, SQLException {
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO messageAcknowledged (messageId, employeeID, acknowledgeCurrentmillis) values(?, ?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
@@ -348,7 +364,5 @@ public class MessageService {
 		pst.close();
 		connection.close();
 	}
-	
-	
 
 }

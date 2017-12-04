@@ -256,14 +256,14 @@ public class MessageResource {
 		return Response.ok().build();
 	}
 
-	// Get warning message for a floor
+	// Get warning message for a floor for a employee that is not acknowledged
 	@GET
-	@Path("/warning/floor/{floorId}")
+	@Path("/warning/floor/{floorId}/employee/{employeeID}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFloorWarningMessage(@PathParam("floorId") int floorId)
+	public Response getFloorWarningMessage(@PathParam("floorId") int floorId, @PathParam("employeeID") int employeeID)
 			throws ClassNotFoundException, SQLException {
 		try {
-			messages = messageService.getFloorWarningMessage(floorId);
+			messages = messageService.getFloorWarningMessage(floorId, employeeID);
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
