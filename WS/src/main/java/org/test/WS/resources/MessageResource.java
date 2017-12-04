@@ -287,6 +287,5 @@ public class MessageResource {
 		return Response.ok().build();
 	}
 
-	// Get all messages for a floor and the status of acknowledgement
 	
 }

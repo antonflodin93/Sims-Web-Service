@@ -301,5 +301,26 @@ public class EmployeeService {
 		connection.close();
 		
 	}
+	
+	// Get all employees that has acknowledged a message
+	public List<Employee> getEmployeesAcknowledged(int messageId) throws ClassNotFoundException, SQLException {
+		employees = new ArrayList<Employee>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM employees INNER JOIN messageacknowledged ON employees.employeeID = messageacknowledged.employeeID AND messageacknowledged.messageId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, messageId);
+		resultSet = pst.executeQuery();
 
+		while (resultSet.next()) {
+			Employee m = new Employee(Integer.parseInt(resultSet.getString("employeeId")),
+					resultSet.getString("employeeFirstName"), resultSet.getString("employeeLastName"),
+					resultSet.getString("employeePhonenumber"), resultSet.getString("employeeCompany"), resultSet.getLong("acknowledgeCurrentMillis"));
+
+			employees.add(m);
+		}
+		pst.close();
+		connection.close();
+
+		return employees;
+	}
 }

@@ -14,6 +14,7 @@ public class Employee {
 	private String employeePassword;
 	private String employeePhonenumber;
 	private String employeeCompany;
+	private long acknowledgeCurrentMillis;
 	
 
 	public Employee() {
@@ -32,8 +33,20 @@ public class Employee {
 		this.employeePhonenumber = employeePhonenumber;
 		this.employeeCompany = employeeCompany;
 	}
+	
+	public Employee(int employeeId, String employeeFirstName, String employeeLastName, String employeePhonenumber, String employeeCompany, long acknowledgeCurrentMillis) {
+		super();
+		this.employeeId = employeeId;
+		this.employeeFirstName = employeeFirstName;
+		this.employeeLastName = employeeLastName;
+		this.employeeUsername = employeeUsername;
+		this.employeeEmail = employeeEmail;
+		this.employeePhonenumber = employeePhonenumber;
+		this.employeeCompany = employeeCompany;
+		this.acknowledgeCurrentMillis = acknowledgeCurrentMillis;
+	}
 
-
+	
 	public int getEmployeeId() {
 		return employeeId;
 	}
@@ -77,6 +90,7 @@ public class Employee {
 	public String getEmployeeEmail() {
 		return employeeEmail;
 	}
+	
 
 
 	public void setEmployeeEmail(String employeeEmail) {
@@ -111,6 +125,16 @@ public class Employee {
 
 	public void setEmployeeCompany(String employeeCompany) {
 		this.employeeCompany = employeeCompany;
+	}
+
+
+	public long getAcknowledgeCurrentMillis() {
+		return acknowledgeCurrentMillis;
+	}
+
+
+	public void setAcknowledgeCurrentMillis(long acknowledgeCurrentMillis) {
+		this.acknowledgeCurrentMillis = acknowledgeCurrentMillis;
 	}
 	
 	

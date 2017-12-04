@@ -206,8 +206,8 @@ public class EmployeeResource {
 	// Employee enters a floor first time
 	@POST
 	@Path("floor/{floorId}/employee/{employeeID}")
-	public Response enterFloorEmployee(@PathParam("floorId") int floorId,
-			@PathParam("employeeID") int employeeID) throws ClassNotFoundException, SQLException {
+	public Response enterFloorEmployee(@PathParam("floorId") int floorId, @PathParam("employeeID") int employeeID)
+			throws ClassNotFoundException, SQLException {
 		try {
 			employeeService.enterFloorEmployee(floorId, employeeID);
 		} catch (ClassNotFoundException | SQLException e) {
@@ -218,4 +218,21 @@ public class EmployeeResource {
 
 	}
 
+	// Get all employees that has acknowledged a message getEmployeesAcknowledged
+	// Returns all employees in a floor
+	@GET
+	@Path("message/{messageId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getEmployeesAcknowledged(@PathParam("messageId") int messageId) throws ClassNotFoundException, SQLException {
+
+		try {
+			employees = employeeService.getEmployeesAcknowledged(messageId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok(new GenericEntity<List<Employee>>(employees) {
+		}).build();
+
+	}
 }
