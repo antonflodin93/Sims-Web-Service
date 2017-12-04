@@ -218,22 +218,6 @@ public class MessageResource {
 		}).build();
 	}
 
-	// Get warning messages for all object in a given floor
-	@GET
-	@Path("/warning/floor/{floorId}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFloorWarningMessage(@PathParam("floorId") int floorId)
-			throws ClassNotFoundException, SQLException {
-		try {
-			messages = messageService.getFactoryObjectFloorWarningMessages(floorId);
-
-		} catch (SQLException | ClassNotFoundException e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
-		}
-		return Response.ok(new GenericEntity<List<Message>>(messages) {
-		}).build();
-	}
-
 	// Get regular messages for all object in a given floor
 	@GET
 	@Path("/regular/floor/{floorId}")
@@ -250,4 +234,59 @@ public class MessageResource {
 		}).build();
 	}
 
+	/*
+	 * 
+	 * FLOOR MESSAGES
+	 * 
+	 */
+
+	// Insert warning message for a floor
+	@POST
+	@Path("/warning/floor/{floorId}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addFloorWarningMessage(@PathParam("floorId") int floorId, Message message)
+			throws ClassNotFoundException, SQLException {
+		try {
+			messageService.addFloorWarningMessage(message, floorId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok().build();
+	}
+
+	// Get warning message for a floor
+	@GET
+	@Path("/warning/floor/{floorId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getFloorWarningMessage(@PathParam("floorId") int floorId)
+			throws ClassNotFoundException, SQLException {
+		try {
+			messages = messageService.getFloorWarningMessage(floorId);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok(new GenericEntity<List<Message>>(messages) {
+		}).build();
+	}
+
+	// Insert acknowledge message for a warning message in a floor
+
+	@POST
+	@Path("/warning/{messageId}/{employeeID}")
+	public Response acknowledgeFloorWarningMessage(@PathParam("messageId") int messageId, @PathParam("employeeID") int employeeID)
+			throws ClassNotFoundException, SQLException {
+		try {
+			messageService.acknowledgeFloorWarningMessage(messageId, employeeID);
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok().build();
+	}
+
+	// Get all messages for a floor and the status of acknowledgement
+	
 }

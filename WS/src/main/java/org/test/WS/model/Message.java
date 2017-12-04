@@ -12,6 +12,7 @@ public class Message {
 	private String messageType;
 	private String date;
 	private String time;
+	private long messageCurrentmillis;
 
 	public Message() {
 		
@@ -27,6 +28,16 @@ public class Message {
 		this.time = time;
 		this.date = date;
 	}
+	
+	public Message(int messageId, String messageText, String messageLabel, String messageType, long messageCurrentmillis) {
+		super();
+		this.messageId = messageId;
+		this.messageText = messageText;
+		this.messageLabel = messageLabel;
+		this.messageType = messageType;
+		this.messageCurrentmillis = messageCurrentmillis;
+	}
+
 
 
 

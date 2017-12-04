@@ -6,13 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import org.test.WS.database.DBConnection;
 import org.test.WS.model.Message;
@@ -35,6 +31,32 @@ public class MessageService {
 		pst.setString(4, message.getMessageType());
 		pst.setLong(5, broadcast);
 		// pst.setTimestamp(6,getCurrentTimeStamp());
+
+		pst.executeUpdate();
+
+		// Get the message id
+		int messageId = 0;
+		ResultSet rs = pst.getGeneratedKeys();
+		if (rs.next()) {
+			messageId = rs.getInt(1);
+		}
+		pst.close();
+		connection.close();
+		return messageId;
+	}
+
+	// Add message that is wanted to be acknowledged
+	public int addMessageToBeAck(Message message, int broadcast) throws ClassNotFoundException, SQLException {
+
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO messages (messageId, messageLabel, messageText, messageType, messageBroadCast, messageCurrentmillis) values(?, ?, ?, ?, ?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+		pst.setLong(1, message.getMessageId());
+		pst.setString(2, message.getMessageLabel());
+		pst.setString(3, message.getMessageText());
+		pst.setString(4, message.getMessageType());
+		pst.setLong(5, broadcast);
+		pst.setLong(6, System.currentTimeMillis());
 
 		pst.executeUpdate();
 
@@ -247,35 +269,13 @@ public class MessageService {
 		return messages;
 	}
 
-	// Get warning message for all objects in a floor
-	public List<Message> getFactoryObjectFloorWarningMessages(int floorId) throws ClassNotFoundException, SQLException {
-		messages = new ArrayList<Message>();
-		// messages.add(new Message(1, "Num: ", "Label", "WARNING" ));
-
-		connection = DBConnection.setDBConnection();
-		String sql = "SELECT objectId FROM factoryobjects WHERE objectFloorId = ?";
-		PreparedStatement pst = connection.prepareStatement(sql);
-		pst.setLong(1, floorId);
-		ResultSet resultSetMessages = pst.executeQuery();
-
-		while (resultSetMessages.next()) {
-
-			// List<Message> objectmessages =
-			// getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId")));
-			int objectId = Integer.parseInt(resultSet.getString("objectId")); // NULL POINTER
-
-			if (getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId"))) != null) {
-				messages.addAll(getFactoryObjectWarningMessage(Integer.parseInt(resultSet.getString("objectId"))));
-			}
-
-			// messages.add(new Message(1, "Num: " + resultSet.getString("objectId"),
-			// "Label", "WARNING" ));
-		}
-		resultSetMessages.close();
-		pst.close();
-		connection.close();
-		return messages;
-	}
+	/*
+	 * 
+	 * 
+	 * FLOOR MESSAGES
+	 * 
+	 * 
+	 */
 
 	// Get warning message for all objects in a floor
 	public List<Message> getFactoryObjectFloorRegularMessages(int floorId) throws ClassNotFoundException, SQLException {
@@ -300,9 +300,53 @@ public class MessageService {
 		return messages;
 	}
 
-	private static java.sql.Timestamp getCurrentTimeStamp() {
-		java.util.Date today = new java.util.Date();
-		return new java.sql.Timestamp(today.getTime());
-
+	// Add warning message for a floor
+	public void addFloorWarningMessage(Message message, int floorId) throws ClassNotFoundException, SQLException {
+		int messageId = addMessageToBeAck(message, 0);
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO messagefloor (messageId, floorId) values(?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, messageId);
+		pst.setLong(2, floorId);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
 	}
+
+	// Get warning messages for a floor
+	public List<Message> getFloorWarningMessage(int floorId) throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM messages INNER JOIN messagefloor ON messages.messageId = messagefloor.messageId AND messages.messageType = 'WARNING' AND messagefloor.floorId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, floorId);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
+					resultSet.getString("messageText"), resultSet.getString("messageLabel"),
+					resultSet.getString("messageType"), resultSet.getLong("messageCurrentmillis"));
+			messages.add(m);
+		}
+		resultSet.close();
+		pst.close();
+		connection.close();
+
+		return messages;
+	}
+
+	// Acknowledge warning message for a floor
+	public void acknowledgeFloorWarningMessage(int messageId, int employeeID) throws ClassNotFoundException, SQLException {
+		connection = DBConnection.setDBConnection();
+		String sql = "INSERT INTO messageAcknowledged (messageId, employeeID, acknowledgeCurrentmillis) values(?, ?, ?)";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, messageId);
+		pst.setLong(2, employeeID);
+		pst.setLong(3, System.currentTimeMillis());
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+	}
+
 }
