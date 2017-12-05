@@ -15,6 +15,7 @@ public class Message {
 	private long messageCurrentmillis;
 	private int buildingId;
 	private String buildingName;
+	
 
 	public Message() {
 		
@@ -56,7 +57,6 @@ public class Message {
 	}
 
 
-	
 
 	public String getBuildingName() {
 		return buildingName;
