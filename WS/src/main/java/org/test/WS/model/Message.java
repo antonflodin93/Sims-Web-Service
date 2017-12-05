@@ -14,6 +14,7 @@ public class Message {
 	private String time;
 	private long messageCurrentmillis;
 	private int buildingId;
+	private String buildingName;
 
 	public Message() {
 		
@@ -36,11 +37,12 @@ public class Message {
 		this.messageText = messageText;
 	}
 	
-	public Message(int messageId, String messageText, int buildingId) {
+	public Message(int messageId, String messageText, int buildingId, String buildingName) {
 		super();
 		this.messageId = messageId;
 		this.messageText = messageText;
 		this.buildingId = buildingId;
+		this.buildingName = buildingName;
 	}
 	
 	
@@ -54,6 +56,16 @@ public class Message {
 	}
 
 
+	
+
+	public String getBuildingName() {
+		return buildingName;
+	}
+
+
+	public void setBuildingName(String buildingName) {
+		this.buildingName = buildingName;
+	}
 
 
 	public String getMessageType() {

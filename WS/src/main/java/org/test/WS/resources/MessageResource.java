@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -290,7 +291,7 @@ public class MessageResource {
 	// Insert acknowledge message for a warning message in a building
 	@POST
 	@Path("/warning/{messageId}/employee/{employeeID}")
-	public Response acknowledgeFloorWarningMessage(@PathParam("messageId") int messageId,
+	public Response acknowledgeBuildingWarningMessage(@PathParam("messageId") int messageId,
 			@PathParam("employeeID") int employeeID) throws ClassNotFoundException, SQLException {
 		try {
 			messageService.acknowledgeBuildingWarningMessage(messageId, employeeID);
@@ -300,7 +301,23 @@ public class MessageResource {
 		}
 		return Response.ok().build();
 	}
+	
+	// Delete building message
+	@DELETE
+	@Path("/warning/building/{messageId}")
+	public Response acknowledgeFloorWarningMessage(@PathParam("messageId") String messageId) throws ClassNotFoundException, SQLException {
+		try {
+			messageService.deleteBuildingmessage(messageId);
 
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok().build();
+	}
+
+	
+	
+	
 	/*
 	 * 
 	 * FLOOR MESSAGES

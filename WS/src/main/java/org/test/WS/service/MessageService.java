@@ -272,10 +272,20 @@ public class MessageService {
 	/*
 	 * 
 	 * 
-	 * FLOOR MESSAGES
+	 * BUILDING MESSAGES
 	 * 
 	 * 
 	 */
+
+	public void deleteBuildingmessage(String messageId) throws SQLException, ClassNotFoundException {
+		connection = DBConnection.setDBConnection();
+		String sql = "DELETE FROM messagebuilding WHERE messageId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setString(1, messageId);
+		pst.executeUpdate();
+		pst.close();
+		connection.close();
+	}
 
 	// Get message for all objects in a floor
 	public List<Message> getFactoryObjectFloorRegularMessages(int floorId) throws ClassNotFoundException, SQLException {
@@ -317,14 +327,15 @@ public class MessageService {
 	public List<Message> getAllBuildingWarningMessages() throws ClassNotFoundException, SQLException {
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
-		String sql = "SELECT messages.messageId, messages.messageText, messagebuilding.buildingId  FROM messages, messagebuilding WHERE messages.messageId = messagebuilding.messageId";
+		String sql = "SELECT messages.messageId, messages.messageText, messagebuilding.buildingId, buildings.buildingName FROM messages, messagebuilding, buildings WHERE messages.messageId = messagebuilding.messageId AND buildings.buildingId = messagebuilding.buildingId";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		resultSet = pst.executeQuery();
 
 		while (resultSet.next()) {
 
 			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
-					resultSet.getString("messageText"), Integer.parseInt(resultSet.getString("buildingId")));
+					resultSet.getString("messageText"), Integer.parseInt(resultSet.getString("buildingId")),
+					resultSet.getString("buildingName"));
 			messages.add(m);
 		}
 		resultSet.close();
