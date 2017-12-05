@@ -29,6 +29,13 @@ public class Message {
 		this.date = date;
 	}
 	
+	public Message(int messageId, String messageText) {
+		super();
+		this.messageId = messageId;
+		this.messageText = messageText;
+	}
+	
+	
 	public Message(int messageId, String messageText, String messageLabel, String messageType, long messageCurrentmillis) {
 		super();
 		this.messageId = messageId;

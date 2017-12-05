@@ -233,22 +233,22 @@ public class MessageResource {
 		return Response.ok(new GenericEntity<List<Message>>(messages) {
 		}).build();
 	}
-
+	
 	/*
 	 * 
-	 * FLOOR MESSAGES
+	 * BUILDING MESSAGES
 	 * 
 	 */
 
-	// Insert warning message for a floor
+	// Insert warning message for a building
 	@POST
-	@Path("/warning/floor/{floorId}")
+	@Path("/warning/building/{buildingId}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response addFloorWarningMessage(@PathParam("floorId") int floorId, Message message)
+	public Response addBuildingWarningMessage(@PathParam("buildingId") int buildingId, Message message)
 			throws ClassNotFoundException, SQLException {
 		try {
-			messageService.addFloorWarningMessage(message, floorId);
+			messageService.addBuildingWarningMessage(message, buildingId);
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -256,14 +256,15 @@ public class MessageResource {
 		return Response.ok().build();
 	}
 
-	// Get warning message for a floor for a employee that is not acknowledged
+
+	// Get warning message for a building for a employee that is not acknowledged
 	@GET
-	@Path("/warning/floor/{floorId}/employee/{employeeID}")
+	@Path("/warning/building/{buildingId}/employee/{employeeID}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getFloorWarningMessage(@PathParam("floorId") int floorId, @PathParam("employeeID") int employeeID)
-			throws ClassNotFoundException, SQLException {
+	public Response getBuildingWarningMessageNotAcked(@PathParam("buildingId") int buildingId,
+			@PathParam("employeeID") int employeeID) throws ClassNotFoundException, SQLException {
 		try {
-			messages = messageService.getFloorWarningMessage(floorId, employeeID);
+			messages = messageService.getBuildingWarningMessageNotAcked(buildingId, employeeID);
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -272,20 +273,25 @@ public class MessageResource {
 		}).build();
 	}
 
-	// Insert acknowledge message for a warning message in a floor
-
+	// Insert acknowledge message for a warning message in a building
 	@POST
-	@Path("/warning/{messageId}/{employeeID}")
-	public Response acknowledgeFloorWarningMessage(@PathParam("messageId") int messageId, @PathParam("employeeID") int employeeID)
-			throws ClassNotFoundException, SQLException {
+	@Path("/warning/{messageId}/employee/{employeeID}")
+	public Response acknowledgeFloorWarningMessage(@PathParam("messageId") int messageId,
+			@PathParam("employeeID") int employeeID) throws ClassNotFoundException, SQLException {
 		try {
-			messageService.acknowledgeFloorWarningMessage(messageId, employeeID);
+			messageService.acknowledgeBuildingWarningMessage(messageId, employeeID);
 
 		} catch (SQLException | ClassNotFoundException e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 		return Response.ok().build();
 	}
-
 	
+	
+	/*
+	 * 
+	 * FLOOR MESSAGES
+	 * 
+	 */
+
 }

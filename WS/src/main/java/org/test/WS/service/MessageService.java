@@ -277,7 +277,7 @@ public class MessageService {
 	 * 
 	 */
 
-	// Get warning message for all objects in a floor
+	// Get message for all objects in a floor
 	public List<Message> getFactoryObjectFloorRegularMessages(int floorId) throws ClassNotFoundException, SQLException {
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
@@ -300,28 +300,50 @@ public class MessageService {
 		return messages;
 	}
 
-	// Add warning message for a floor
-	public void addFloorWarningMessage(Message message, int floorId) throws ClassNotFoundException, SQLException {
+	// Add warning message for a building
+	public void addBuildingWarningMessage(Message message, int buildingId) throws ClassNotFoundException, SQLException {
 		int messageId = addMessageToBeAck(message, 0);
 		connection = DBConnection.setDBConnection();
-		String sql = "INSERT INTO messagefloor (messageId, floorId) values(?, ?)";
+		String sql = "INSERT INTO messagebuilding (messageId, buildingId) values(?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, messageId);
-		pst.setLong(2, floorId);
+		pst.setLong(2, buildingId);
 		pst.executeUpdate();
 		pst.close();
 		connection.close();
 	}
 
-	// Get warning messages for a floor that has not yet been acknowledged by
-	// employee
-	public List<Message> getFloorWarningMessage(int floorId, int employeeID)
+
+	// Get warning messages for a building
+	public List<Message> getBuildingWarningMessage(int buildingId) throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT * FROM messages INNER JOIN messagebuilding ON messages.messageId = messagebuilding.messageId AND messagebuilding.buildingId = ?";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		pst.setLong(1, buildingId);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
+					resultSet.getString("messageText"));
+			messages.add(m);
+		}
+		resultSet.close();
+		pst.close();
+		connection.close();
+
+		return messages;
+	}
+
+	// Get warning messages for a building that has not yet been acknowledged by employee
+	public List<Message> getBuildingWarningMessageNotAcked(int buildingId, int employeeID)
 			throws ClassNotFoundException, SQLException {
 		messages = new ArrayList<Message>();
 		connection = DBConnection.setDBConnection();
-		String sql = "SELECT messages.messageId, messages.messageText, messages.messageLabel, messages.messageType, messages.messageCurrentmillis FROM messages, messagefloor WHERE messages.messageId = messagefloor.messageId AND messages.messageType = 'WARNING' AND messagefloor.floorId = ? AND messages.messageId NOT IN (SELECT messageacknowledged.messageId FROM messageacknowledged WHERE messageacknowledged.employeeID = ?)";
+		String sql = "SELECT messages.messageId, messages.messageText, messages.messageLabel, messages.messageType, messages.messageCurrentmillis FROM messages, messagebuilding WHERE messages.messageId = messagebuilding.messageId AND messages.messageType = 'WARNING' AND messagebuilding.buildingId = ? AND messages.messageId NOT IN (SELECT messageacknowledged.messageId FROM messageacknowledged WHERE messageacknowledged.employeeID = ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
-		pst.setLong(1, floorId);
+		pst.setLong(1, buildingId);
 		pst.setLong(2, employeeID);
 		resultSet = pst.executeQuery();
 
@@ -339,20 +361,8 @@ public class MessageService {
 		return messages;
 	}
 
-	/*
-	 * 
-	 * 
-	 * SELECT messages.messageText FROM messages, messagefloor WHERE
-	 * messages.messageId = messagefloor.messageId AND messages.messageType =
-	 * 'WARNING' AND messagefloor.floorId = 1 AND messages.messageId NOT IN (SELECT
-	 * messageacknowledged.messageId FROM messageacknowledged WHERE
-	 * messageacknowledged.employeeID = 6)
-	 * 
-	 * 
-	 */
-
-	// Acknowledge warning message for a floor
-	public void acknowledgeFloorWarningMessage(int messageId, int employeeID)
+	// Acknowledge warning message for a building
+	public void acknowledgeBuildingWarningMessage(int messageId, int employeeID)
 			throws ClassNotFoundException, SQLException {
 		connection = DBConnection.setDBConnection();
 		String sql = "INSERT INTO messageAcknowledged (messageId, employeeID, acknowledgeCurrentmillis) values(?, ?, ?)";
