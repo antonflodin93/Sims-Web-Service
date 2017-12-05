@@ -233,12 +233,27 @@ public class MessageResource {
 		return Response.ok(new GenericEntity<List<Message>>(messages) {
 		}).build();
 	}
-	
+
 	/*
 	 * 
 	 * BUILDING MESSAGES
 	 * 
 	 */
+
+	// Get all warning messages for buildings
+	@GET
+	@Path("/warning/building")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getAllBuildingWarningMessages() throws ClassNotFoundException, SQLException {
+		try {
+			messages = messageService.getAllBuildingWarningMessages();
+
+		} catch (SQLException | ClassNotFoundException e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
+		}
+		return Response.ok(new GenericEntity<List<Message>>(messages) {
+		}).build();
+	}
 
 	// Insert warning message for a building
 	@POST
@@ -255,7 +270,6 @@ public class MessageResource {
 		}
 		return Response.ok().build();
 	}
-
 
 	// Get warning message for a building for a employee that is not acknowledged
 	@GET
@@ -286,8 +300,7 @@ public class MessageResource {
 		}
 		return Response.ok().build();
 	}
-	
-	
+
 	/*
 	 * 
 	 * FLOOR MESSAGES

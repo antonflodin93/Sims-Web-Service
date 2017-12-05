@@ -13,6 +13,7 @@ public class Message {
 	private String date;
 	private String time;
 	private long messageCurrentmillis;
+	private int buildingId;
 
 	public Message() {
 		
@@ -33,6 +34,13 @@ public class Message {
 		super();
 		this.messageId = messageId;
 		this.messageText = messageText;
+	}
+	
+	public Message(int messageId, String messageText, int buildingId) {
+		super();
+		this.messageId = messageId;
+		this.messageText = messageText;
+		this.buildingId = buildingId;
 	}
 	
 	
@@ -104,6 +112,26 @@ public class Message {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+
+	public long getMessageCurrentmillis() {
+		return messageCurrentmillis;
+	}
+
+
+	public void setMessageCurrentmillis(long messageCurrentmillis) {
+		this.messageCurrentmillis = messageCurrentmillis;
+	}
+
+
+	public int getBuildingId() {
+		return buildingId;
+	}
+
+
+	public void setBuildingId(int buildingId) {
+		this.buildingId = buildingId;
 	}
 	
 	

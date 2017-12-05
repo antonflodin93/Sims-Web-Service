@@ -313,6 +313,26 @@ public class MessageService {
 		connection.close();
 	}
 
+	// Get warning messages for a building
+	public List<Message> getAllBuildingWarningMessages() throws ClassNotFoundException, SQLException {
+		messages = new ArrayList<Message>();
+		connection = DBConnection.setDBConnection();
+		String sql = "SELECT messages.messageId, messages.messageText, messagebuilding.buildingId  FROM messages, messagebuilding WHERE messages.messageId = messagebuilding.messageId";
+		PreparedStatement pst = connection.prepareStatement(sql);
+		resultSet = pst.executeQuery();
+
+		while (resultSet.next()) {
+
+			Message m = new Message(Integer.parseInt(resultSet.getString("messageId")),
+					resultSet.getString("messageText"), Integer.parseInt(resultSet.getString("buildingId")));
+			messages.add(m);
+		}
+		resultSet.close();
+		pst.close();
+		connection.close();
+
+		return messages;
+	}
 
 	// Get warning messages for a building
 	public List<Message> getBuildingWarningMessage(int buildingId) throws ClassNotFoundException, SQLException {
@@ -336,7 +356,8 @@ public class MessageService {
 		return messages;
 	}
 
-	// Get warning messages for a building that has not yet been acknowledged by employee
+	// Get warning messages for a building that has not yet been acknowledged by
+	// employee
 	public List<Message> getBuildingWarningMessageNotAcked(int buildingId, int employeeID)
 			throws ClassNotFoundException, SQLException {
 		messages = new ArrayList<Message>();
