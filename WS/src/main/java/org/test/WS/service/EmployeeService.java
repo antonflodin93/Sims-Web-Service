@@ -281,7 +281,7 @@ public class EmployeeService {
 	// Employee enters a building
 	public void enterBuildingEmployee(int buildingId, int employeeID) throws ClassNotFoundException, SQLException {
 		connection = DBConnection.setDBConnection();
-		String sql = "INSERT INTO employeebuilding (buildingId, employeeID) values(?, ?)";
+		String sql = "INSERT IGNORE INTO employeebuilding (buildingId, employeeID) values(?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, buildingId);
 		pst.setLong(2, employeeID);
@@ -292,7 +292,7 @@ public class EmployeeService {
 
 	public void enterFloorEmployee(int floorId, int employeeID) throws ClassNotFoundException, SQLException {
 		connection = DBConnection.setDBConnection();
-		String sql = "INSERT INTO employeefloor (floorId, employeeID) values(?, ?)";
+		String sql = "INSERT IGNORE INTO employeefloor (floorId, employeeID) values(?, ?)";
 		PreparedStatement pst = connection.prepareStatement(sql);
 		pst.setLong(1, floorId);
 		pst.setLong(2, employeeID);
